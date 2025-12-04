@@ -3,397 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EntryX - Automated Trading System</title>
+    <title>EntryX Live Trading Journal</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; background: #0a0e14; color: #e8eaed; line-height: 1.6; overflow-x: hidden; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0e14; color: #e8eaed; line-height: 1.6; padding: 40px 20px; }
         
-        .hero-container { position: relative; min-height: 100vh; display: flex; }
+        .container { max-width: 1200px; margin: 0 auto; }
         
-        .panel { min-height: 100vh; position: relative; transition: all 0.6s ease; overflow: hidden; }
-        .panel-left { background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); flex: 1; }
-        .panel-right { background: linear-gradient(135deg, #0f1117 0%, #1a1d29 100%); flex: 1; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .logo { font-size: 28px; font-weight: 900; color: #cbff38; margin-bottom: 10px; }
+        .subtitle { color: #64748b; font-size: 14px; }
+        .live-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(34, 197, 94, 0.1); padding: 8px 16px; border-radius: 50px; font-size: 13px; color: #22c55e; font-weight: 600; margin-top: 15px; }
+        .live-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         
-        .hero-container.expand-right .panel-left { flex: 0; min-width: 0; opacity: 0; }
-        .hero-container.expand-right .panel-right { flex: 1; }
-        .hero-container.expand-left .panel-right { flex: 0; min-width: 0; opacity: 0; }
-        .hero-container.expand-left .panel-left { flex: 1; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(203, 255, 56, 0.2); border-radius: 12px; padding: 20px; text-align: center; }
+        .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .stat-value { font-size: 28px; font-weight: 800; color: #cbff38; }
+        .stat-value.negative { color: #ef4444; }
         
-        .panel-content { padding: 60px; display: flex; flex-direction: column; justify-content: center; min-height: 100vh; position: relative; z-index: 1; }
-        .panel-right .panel-content { align-items: center; text-align: center; }
+        .equity-section { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(203, 255, 56, 0.2); border-radius: 12px; padding: 25px; margin-bottom: 40px; }
+        .equity-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .equity-title { font-size: 16px; font-weight: 600; color: #ffffff; }
+        .equity-value { font-size: 24px; font-weight: 800; color: #cbff38; }
+        .equity-change { font-size: 14px; color: #22c55e; margin-left: 10px; }
+        .equity-change.negative { color: #ef4444; }
+        .equity-chart { height: 150px; }
+        .equity-svg { width: 100%; height: 100%; }
+        .equity-line { fill: none; stroke: url(#eqGradient); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .equity-area { fill: url(#eqAreaGradient); }
         
-        .expanded-layout { display: none; width: 100%; min-height: 100vh; }
-        .hero-container.expand-right .panel-right .default-content { display: none; }
-        .hero-container.expand-right .panel-right .expanded-layout { display: flex; }
-        .hero-container.expand-left .panel-left .default-content { display: none; }
-        .hero-container.expand-left .panel-left .expanded-layout { display: flex; }
+        .trades-section { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(203, 255, 56, 0.2); border-radius: 12px; overflow: hidden; }
+        .trades-header { padding: 20px 25px; border-bottom: 1px solid rgba(203, 255, 56, 0.1); }
+        .trades-title { font-size: 16px; font-weight: 600; color: #ffffff; }
         
-        .expand-col { flex: 1; padding: 60px; display: flex; flex-direction: column; justify-content: center; }
-        .expand-col-left { border-right: 1px solid rgba(203, 255, 56, 0.1); }
-        .expand-col-right { border-left: 1px solid rgba(203, 255, 56, 0.1); }
+        .trades-table { width: 100%; border-collapse: collapse; }
+        .trades-table th { background: rgba(203, 255, 56, 0.05); padding: 12px 15px; text-align: left; font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .trades-table td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        .trades-table tr:hover { background: rgba(203, 255, 56, 0.03); }
         
-        .nav-arrows { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); display: flex; gap: 60px; z-index: 1000; }
-        .nav-arrow { color: #cbff38; font-size: 28px; cursor: pointer; transition: all 0.3s ease; opacity: 0.5; padding: 10px 15px; }
-        .nav-arrow:hover { opacity: 1; }
-        .nav-arrow.disabled { opacity: 0.15; pointer-events: none; }
+        .trade-buy { color: #22c55e; font-weight: 600; }
+        .trade-sell { color: #ef4444; font-weight: 600; }
+        .profit-positive { color: #22c55e; font-weight: 700; }
+        .profit-negative { color: #ef4444; font-weight: 700; }
         
-        .logo { font-size: 32px; font-weight: 900; color: #cbff38; letter-spacing: -1px; margin-bottom: 50px; }
-        .hero-title { font-size: 52px; font-weight: 800; color: #ffffff; margin-bottom: 20px; letter-spacing: -2px; line-height: 1.1; }
-        .hero-title .gradient-text { background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero-subtitle { font-size: 18px; color: #94a3b8; margin-bottom: 40px; line-height: 1.6; }
+        .symbol-badge { background: rgba(203, 255, 56, 0.1); padding: 4px 10px; border-radius: 6px; font-size: 12px; color: #cbff38; font-weight: 600; }
         
-        .stats-showcase { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 40px; }
-        .stat-item { position: relative; background: rgba(30, 41, 59, 0.6); border-radius: 12px; padding: 24px; transition: all 0.3s ease; }
-        .stat-item::before { content: ''; position: absolute; inset: 0; border-radius: 12px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-        .stat-item:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(203, 255, 56, 0.1); }
-        .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 600; }
-        .stat-value { font-size: 36px; font-weight: 800; color: #cbff38; line-height: 1.2; }
-        .stat-subtitle { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #64748b; }
         
-        .feature-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 35px; }
-        .badge { position: relative; background: rgba(203, 255, 56, 0.1); padding: 8px 16px; border-radius: 50px; font-size: 12px; color: #cbff38; font-weight: 600; }
-        .badge::before { content: ''; position: absolute; inset: 0; border-radius: 50px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .updated { text-align: center; margin-top: 30px; font-size: 12px; color: #64748b; }
         
-        .cta-group { display: flex; gap: 15px; flex-wrap: wrap; }
-        .btn-primary { background: #cbff38; color: #0a0e14; padding: 16px 32px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 15px; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(203, 255, 56, 0.3); }
-        .btn-secondary { background: transparent; color: #ffffff; padding: 16px 32px; border-radius: 50px; font-weight: 600; text-decoration: none; font-size: 15px; border: 1px solid rgba(203, 255, 56, 0.3); transition: all 0.3s ease; }
-        .btn-secondary:hover { background: rgba(203, 255, 56, 0.1); border-color: #cbff38; }
-        
-        .orb-1 { position: absolute; top: 20%; right: 20%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(203, 255, 56, 0.12) 0%, transparent 70%); border-radius: 50%; filter: blur(60px); animation: float1 15s ease-in-out infinite; }
-        .orb-2 { position: absolute; bottom: 30%; left: 10%; width: 250px; height: 250px; background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%); border-radius: 50%; filter: blur(50px); animation: float2 12s ease-in-out infinite; }
-        @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-20px, 15px); } }
-        @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(15px, -20px); } }
-        
-        .rocket-container { position: relative; z-index: 1; animation: rocketFloat 4s ease-in-out infinite; }
-        @keyframes rocketFloat { 0%, 100% { transform: translateY(0) rotate(-2deg); } 25% { transform: translateY(-15px) rotate(0deg); } 50% { transform: translateY(-5px) rotate(2deg); } 75% { transform: translateY(-20px) rotate(0deg); } }
-        .rocket-icon { width: 180px; height: 180px; margin-bottom: 30px; }
-        .rocket-svg { width: 100%; height: 100%; filter: drop-shadow(0 0 30px rgba(203, 255, 56, 0.3)); }
-        .flame { animation: flicker 0.1s ease-in-out infinite alternate; }
-        @keyframes flicker { 0% { opacity: 0.7; transform: scaleY(0.95); } 100% { opacity: 1; transform: scaleY(1.05); } }
-        
-        .scale-message { font-size: 56px; font-weight: 900; text-align: center; line-height: 1.1; position: relative; z-index: 1; color: #cbff38; }
-        .scale-subtitle { font-size: 16px; color: #64748b; margin-top: 15px; position: relative; z-index: 1; }
-        
-        .equity-section h3 { font-size: 28px; color: #ffffff; margin-bottom: 10px; }
-        .equity-section > p { color: #94a3b8; margin-bottom: 30px; }
-        
-        .equity-chart { position: relative; background: rgba(30, 41, 59, 0.4); border-radius: 16px; padding: 30px; margin-bottom: 30px; }
-        .equity-chart::before { content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .chart-title { color: #ffffff; font-size: 16px; font-weight: 600; }
-        .chart-value { color: #cbff38; font-size: 24px; font-weight: 800; }
-        .chart-change { color: #22c55e; font-size: 14px; }
-        .chart-svg { width: 100%; height: 150px; }
-        .chart-line { fill: none; stroke: url(#chartGradient); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-        .chart-area { fill: url(#areaGradient); }
-        .chart-grid { stroke: rgba(203, 255, 56, 0.1); stroke-width: 1; }
-        .chart-dot { fill: #cbff38; }
-        
-        .features-section h3 { font-size: 28px; color: #ffffff; margin-bottom: 10px; }
-        .features-section > p { color: #94a3b8; margin-bottom: 30px; }
-        
-        .bot-card { position: relative; background: rgba(30, 41, 59, 0.4); border-radius: 16px; padding: 25px; margin-bottom: 20px; }
-        .bot-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-        .bot-card h4 { color: #cbff38; font-size: 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
-        .bot-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; color: #0a0e14; }
-        .bot-card p { color: #94a3b8; font-size: 14px; margin-bottom: 15px; line-height: 1.6; }
-        .bot-features { display: flex; flex-wrap: wrap; gap: 8px; }
-        .bot-feature { background: rgba(203, 255, 56, 0.1); padding: 4px 12px; border-radius: 20px; font-size: 11px; color: #cbff38; }
-        
-        .buy-section { margin-top: 30px; text-align: center; }
-        .buy-section .price { font-size: 42px; font-weight: 900; color: #ffffff; margin-bottom: 5px; }
-        .buy-section .price span { color: #cbff38; }
-        .buy-section .price-sub { color: #64748b; font-size: 14px; margin-bottom: 20px; }
-        .btn-buy { background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); color: #ffffff; padding: 18px 50px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 16px; display: inline-block; transition: all 0.3s ease; }
-        .btn-buy:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(203, 255, 56, 0.3); }
-        
-        .rocket-centered { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        
-        @media (max-width: 968px) { 
-            .hero-container { flex-direction: column; }
-            .panel { min-height: auto; }
-            .panel-content { padding: 40px 30px; min-height: auto; }
-            .hero-title { font-size: 32px; }
-            .scale-message { font-size: 36px; }
-            .stats-showcase { grid-template-columns: 1fr; }
-            .cta-group { flex-direction: column; }
-            .nav-arrows { bottom: 20px; gap: 40px; }
-            .expanded-layout { flex-direction: column; }
-            .expand-col { padding: 40px 30px; }
-            .expand-col-left, .expand-col-right { border: none; border-bottom: 1px solid rgba(203, 255, 56, 0.1); }
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .trades-table { font-size: 12px; }
+            .trades-table th, .trades-table td { padding: 10px 8px; }
         }
     </style>
 </head>
 <body>
-    <div class="hero-container" id="heroContainer">
-        <div class="panel panel-left">
-            <div class="panel-content default-content">
-                <div class="logo">ENTRYX</div>
-                <h1 class="hero-title">Stop Trading Manually.<br>Let the <span class="gradient-text">EA</span> Work.</h1>
-                <p class="hero-subtitle">Automated breakout trading system for NAS100 & Gold with verified live performance and prop firm friendly risk management.</p>
-                <div class="stats-showcase">
-                    <div class="stat-item">
-                        <div class="stat-label">Win Rate</div>
-                        <div class="stat-value">71%</div>
-                        <div class="stat-subtitle">Exposed to Market 2hrs/Day</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Profit Factor</div>
-                        <div class="stat-value">1.8</div>
-                        <div class="stat-subtitle">Risk to Reward</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Max Drawdown</div>
-                        <div class="stat-value">3.4%</div>
-                        <div class="stat-subtitle">Prop Firm Safe</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Backtested</div>
-                        <div class="stat-value">5 Yrs</div>
-                        <div class="stat-subtitle">Real Tick Data</div>
-                    </div>
-                </div>
-                <div class="feature-badges">
-                    <span class="badge">Prop Firm Friendly</span>
-                    <span class="badge">MT5 Compatible</span>
-                    <span class="badge">Live Verified</span>
-                    <span class="badge">24/5 Trading</span>
-                </div>
-                <div class="cta-group">
-                    <a href="features.html" class="btn-primary">Our EA's<span>→</span></a>
-                    <a href="live-journal.html" class="btn-secondary">Live Journal</a>
-                    <a href="pricing.html" class="btn-secondary">See Pricing</a>
-                </div>
+    <div class="container">
+        <div class="header">
+            <div class="logo">ENTRYX</div>
+            <div class="subtitle">Live Trading Journal</div>
+            <div class="live-badge"><span class="live-dot"></span> Live Updates</div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Balance</div>
+                <div class="stat-value" id="balance">£1,000</div>
             </div>
-            
-            <div class="expanded-layout">
-                <div class="expand-col expand-col-left">
-                    <div class="logo">ENTRYX</div>
-                    <h1 class="hero-title">Stop Trading Manually.<br>Let the <span class="gradient-text">EA</span> Work.</h1>
-                    <p class="hero-subtitle">Automated breakout trading system for NAS100 & Gold with verified live performance and prop firm friendly risk management.</p>
-                    <div class="stats-showcase">
-                        <div class="stat-item">
-                            <div class="stat-label">Win Rate</div>
-                            <div class="stat-value">71%</div>
-                            <div class="stat-subtitle">Exposed to Market 2hrs/Day</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Profit Factor</div>
-                            <div class="stat-value">1.8</div>
-                            <div class="stat-subtitle">Risk to Reward</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Max Drawdown</div>
-                            <div class="stat-value">3.4%</div>
-                            <div class="stat-subtitle">Prop Firm Safe</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-label">Backtested</div>
-                            <div class="stat-value">5 Yrs</div>
-                            <div class="stat-subtitle">Real Tick Data</div>
-                        </div>
-                    </div>
-                    <div class="feature-badges">
-                        <span class="badge">Prop Firm Friendly</span>
-                        <span class="badge">MT5 Compatible</span>
-                        <span class="badge">Live Verified</span>
-                        <span class="badge">24/5 Trading</span>
-                    </div>
-                </div>
-                <div class="expand-col expand-col-right">
-                    <div class="features-section">
-                        <h3>Choose Your Strategy</h3>
-                        <p>Two powerful EAs for Gold and NAS100</p>
-                        
-                        <div class="bot-card">
-                            <h4><div class="bot-icon">R</div> EntryX Razor</h4>
-                            <p>Our entry level EA with 2 high probability trading levels. Perfect for traders who want consistent, lower frequency setups on both Gold and NAS100.</p>
-                            <div class="bot-features">
-                                <span class="bot-feature">Gold + NAS100</span>
-                                <span class="bot-feature">2 HP Levels</span>
-                                <span class="bot-feature">Prop Friendly</span>
-                                <span class="bot-feature">24/5 Trading</span>
-                            </div>
-                        </div>
-                        
-                        <div class="bot-card">
-                            <h4><div class="bot-icon">P</div> EntryX Power</h4>
-                            <p>Our premium EA with 3 high probability trading levels. More opportunities, same precision. Ideal for traders wanting maximum exposure on Gold and NAS100.</p>
-                            <div class="bot-features">
-                                <span class="bot-feature">Gold + NAS100</span>
-                                <span class="bot-feature">3 HP Levels</span>
-                                <span class="bot-feature">Prop Friendly</span>
-                                <span class="bot-feature">Priority Support</span>
-                            </div>
-                        </div>
-                        
-                        <div class="buy-section">
-                            <div class="price">From <span>£79</span>/mo</div>
-                            <div class="price-sub">Cancel anytime • Instant access</div>
-                            <a href="pricing.html" class="btn-buy">Get Started →</a>
-                        </div>
-                    </div>
-                </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Profit</div>
+                <div class="stat-value" id="totalProfit">£0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Win Rate</div>
+                <div class="stat-value" id="winRate">0%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Trades</div>
+                <div class="stat-value" id="totalTrades">0</div>
             </div>
         </div>
         
-        <div class="panel panel-right">
-            <div class="orb-1"></div>
-            <div class="orb-2"></div>
-            
-            <div class="panel-content default-content">
-                <div class="rocket-container">
-                    <div class="rocket-icon">
-                        <svg class="rocket-svg" viewBox="0 0 200 200">
-                            <path d="M92 55 L90 125 L110 125 L108 55 Q108 38 100 30 Q92 38 92 55 Z" fill="#cbff38"/>
-                            <path d="M96 50 L95 125 L100 125 L100 45 Q100 36 96 50 Z" fill="#d4ff5c" opacity="0.6"/>
-                            <path d="M96 40 L100 18 L104 40 Z" fill="#a8cc2c"/>
-                            <ellipse cx="100" cy="58" rx="7" ry="11" fill="#0a0e14" opacity="0.8"/>
-                            <ellipse cx="100" cy="57" rx="5" ry="8" fill="#7c3aed" opacity="0.9"/>
-                            <ellipse cx="99" cy="54" rx="2" ry="3" fill="#a78bfa" opacity="0.9"/>
-                            <path d="M90 105 L72 138 L90 125 Z" fill="#7c3aed"/>
-                            <path d="M110 105 L128 138 L110 125 Z" fill="#7c3aed"/>
-                            <rect x="91" y="125" width="18" height="9" fill="#5b21b6" rx="1"/>
-                            <rect x="93" y="134" width="14" height="5" fill="#4c1d95"/>
-                            <g class="flame">
-                                <path d="M94 139 L96 168 L98 139 Z" fill="#ff6b35" opacity="0.9"/>
-                                <path d="M102 139 L104 168 L106 139 Z" fill="#ff6b35" opacity="0.9"/>
-                                <path d="M95 139 L96 160 L97 139 Z" fill="#ffd700" opacity="0.8"/>
-                                <path d="M103 139 L104 160 L105 139 Z" fill="#ffd700" opacity="0.8"/>
-                                <path d="M98 139 L100 175 L102 139 Z" fill="#ff6b35" opacity="0.7"/>
-                            </g>
-                        </svg>
-                    </div>
+        <div class="equity-section">
+            <div class="equity-header">
+                <div class="equity-title">Equity Curve</div>
+                <div>
+                    <span class="equity-value" id="equityValue">£1,000</span>
+                    <span class="equity-change" id="equityChange">+0%</span>
                 </div>
-                <h2 class="scale-message">EntryX<br>Power</h2>
-                <p class="scale-subtitle">Tested & Verified</p>
             </div>
-            
-            <div class="expanded-layout">
-                <div class="expand-col expand-col-left">
-                    <div class="equity-section">
-                        <h3>Live Performance</h3>
-                        <p>Real equity curve from our £1,000 live account</p>
-                        
-                        <div class="equity-chart">
-                            <div class="chart-header">
-                                <div>
-                                    <div class="chart-title">Account Balance</div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <div class="chart-value">£1,070</div>
-                                    <div class="chart-change">+7.0% ↑</div>
-                                </div>
-                            </div>
-                            <svg class="chart-svg" viewBox="0 0 800 150" preserveAspectRatio="none">
-                                <defs>
-                                    <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" style="stop-color:#cbff38"/>
-                                        <stop offset="100%" style="stop-color:#7c3aed"/>
-                                    </linearGradient>
-                                    <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                        <stop offset="0%" style="stop-color:#cbff38;stop-opacity:0.3"/>
-                                        <stop offset="100%" style="stop-color:#cbff38;stop-opacity:0"/>
-                                    </linearGradient>
-                                </defs>
-                                <line class="chart-grid" x1="0" y1="37" x2="800" y2="37"/>
-                                <line class="chart-grid" x1="0" y1="75" x2="800" y2="75"/>
-                                <line class="chart-grid" x1="0" y1="112" x2="800" y2="112"/>
-                                <path class="chart-area" d="M0,120 L80,115 L160,118 L240,108 L320,112 L400,105 L480,98 L560,102 L640,92 L720,88 L800,80 L800,150 L0,150 Z"/>
-                                <path class="chart-line" d="M0,120 L80,115 L160,118 L240,108 L320,112 L400,105 L480,98 L560,102 L640,92 L720,88 L800,80"/>
-                                <circle class="chart-dot" cx="800" cy="80" r="5"/>
-                            </svg>
-                        </div>
-                        
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
-                            <div class="stat-item" style="padding: 18px; text-align: center;">
-                                <div class="stat-value" style="font-size: 28px;">47</div>
-                                <div class="stat-subtitle">Total Trades</div>
-                            </div>
-                            <div class="stat-item" style="padding: 18px; text-align: center;">
-                                <div class="stat-value" style="font-size: 28px;">33</div>
-                                <div class="stat-subtitle">Wins</div>
-                            </div>
-                            <div class="stat-item" style="padding: 18px; text-align: center;">
-                                <div class="stat-value" style="font-size: 28px;">14</div>
-                                <div class="stat-subtitle">Losses</div>
-                            </div>
-                        </div>
-                        
-                        <div style="text-align: center; margin-top: 30px;">
-                            <a href="live-journal.html" class="btn-primary">View Full Journal →</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="expand-col expand-col-right rocket-centered">
-                    <div class="rocket-container">
-                        <div class="rocket-icon">
-                            <svg class="rocket-svg" viewBox="0 0 200 200">
-                                <path d="M92 55 L90 125 L110 125 L108 55 Q108 38 100 30 Q92 38 92 55 Z" fill="#cbff38"/>
-                                <path d="M96 50 L95 125 L100 125 L100 45 Q100 36 96 50 Z" fill="#d4ff5c" opacity="0.6"/>
-                                <path d="M96 40 L100 18 L104 40 Z" fill="#a8cc2c"/>
-                                <ellipse cx="100" cy="58" rx="7" ry="11" fill="#0a0e14" opacity="0.8"/>
-                                <ellipse cx="100" cy="57" rx="5" ry="8" fill="#7c3aed" opacity="0.9"/>
-                                <ellipse cx="99" cy="54" rx="2" ry="3" fill="#a78bfa" opacity="0.9"/>
-                                <path d="M90 105 L72 138 L90 125 Z" fill="#7c3aed"/>
-                                <path d="M110 105 L128 138 L110 125 Z" fill="#7c3aed"/>
-                                <rect x="91" y="125" width="18" height="9" fill="#5b21b6" rx="1"/>
-                                <rect x="93" y="134" width="14" height="5" fill="#4c1d95"/>
-                                <g class="flame">
-                                    <path d="M94 139 L96 168 L98 139 Z" fill="#ff6b35" opacity="0.9"/>
-                                    <path d="M102 139 L104 168 L106 139 Z" fill="#ff6b35" opacity="0.9"/>
-                                    <path d="M95 139 L96 160 L97 139 Z" fill="#ffd700" opacity="0.8"/>
-                                    <path d="M103 139 L104 160 L105 139 Z" fill="#ffd700" opacity="0.8"/>
-                                    <path d="M98 139 L100 175 L102 139 Z" fill="#ff6b35" opacity="0.7"/>
-                                </g>
-                            </svg>
-                        </div>
-                    </div>
-                    <h2 class="scale-message">EntryX<br>Power</h2>
-                    <p class="scale-subtitle">Tested & Verified</p>
-                </div>
+            <div class="equity-chart">
+                <svg class="equity-svg" viewBox="0 0 800 150" preserveAspectRatio="none" id="equityChart">
+                    <defs>
+                        <linearGradient id="eqGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#cbff38"/>
+                            <stop offset="100%" style="stop-color:#7c3aed"/>
+                        </linearGradient>
+                        <linearGradient id="eqAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#cbff38;stop-opacity:0.2"/>
+                            <stop offset="100%" style="stop-color:#cbff38;stop-opacity:0"/>
+                        </linearGradient>
+                    </defs>
+                    <path class="equity-area" id="eqArea" d="M0,150 L800,150 Z"/>
+                    <path class="equity-line" id="eqLine" d="M0,75 L800,75"/>
+                </svg>
             </div>
         </div>
         
-        <div class="nav-arrows">
-            <span class="nav-arrow arrow-left" id="arrowLeft" onclick="navigateLeft()">←</span>
-            <span class="nav-arrow arrow-right" id="arrowRight" onclick="navigateRight()">→</span>
+        <div class="trades-section">
+            <div class="trades-header">
+                <div class="trades-title">Trade History</div>
+            </div>
+            <table class="trades-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Symbol</th>
+                        <th>Type</th>
+                        <th>Lots</th>
+                        <th>Entry</th>
+                        <th>Exit</th>
+                        <th>Profit</th>
+                    </tr>
+                </thead>
+                <tbody id="tradesBody">
+                    <tr><td colspan="7" class="empty-state">Loading trades...</td></tr>
+                </tbody>
+            </table>
         </div>
+        
+        <div class="updated" id="lastUpdated">Last updated: --</div>
     </div>
     
     <script>
-        const heroContainer = document.getElementById('heroContainer');
-        let currentState = 'split';
+        const REPO_URL = 'https://raw.githubusercontent.com/Kaneneedspips/entryx-live-report/main';
         
-        function navigateLeft() {
-            if (currentState === 'expand-left') {
-                heroContainer.classList.remove('expand-left');
-                currentState = 'split';
-            } else if (currentState === 'split') {
-                heroContainer.classList.add('expand-right');
-                currentState = 'expand-right';
+        async function loadData() {
+            await loadTrades();
+            await loadEquity();
+        }
+        
+        async function loadTrades() {
+            try {
+                const response = await fetch(REPO_URL + '/trades.csv?' + Date.now());
+                const csv = await response.text();
+                const trades = parseCSV(csv);
+                displayTrades(trades);
+                calculateStats(trades);
+            } catch (e) {
+                console.log('Error loading trades:', e);
+                document.getElementById('tradesBody').innerHTML = '<tr><td colspan="7" class="empty-state">No trades yet</td></tr>';
             }
-            updateArrows();
         }
         
-        function navigateRight() {
-            if (currentState === 'expand-right') {
-                heroContainer.classList.remove('expand-right');
-                currentState = 'split';
-            } else if (currentState === 'split') {
-                heroContainer.classList.add('expand-left');
-                currentState = 'expand-left';
+        async function loadEquity() {
+            try {
+                const response = await fetch(REPO_URL + '/equity.json?' + Date.now());
+                const data = await response.json();
+                
+                document.getElementById('equityValue').textContent = '£' + data.balance.toLocaleString();
+                document.getElementById('balance').textContent = '£' + data.balance.toLocaleString();
+                
+                const change = ((data.balance - data.startBalance) / data.startBalance * 100).toFixed(1);
+                const changeEl = document.getElementById('equityChange');
+                changeEl.textContent = (change >= 0 ? '+' : '') + change + '%';
+                changeEl.className = 'equity-change' + (change < 0 ? ' negative' : '');
+                
+                if (data.history && data.history.length > 1) {
+                    drawEquityCurve(data.history);
+                }
+                
+                document.getElementById('lastUpdated').textContent = 'Last updated: ' + data.updated;
+            } catch (e) {
+                console.log('Error loading equity:', e);
             }
-            updateArrows();
         }
         
-        function updateArrows() {
-            const leftArrow = document.getElementById('arrowLeft');
-            const rightArrow = document.getElementById('arrowRight');
-            leftArrow.classList.toggle('disabled', currentState === 'expand-right');
-            rightArrow.classList.toggle('disabled', currentState === 'expand-left');
+        function parseCSV(csv) {
+            const lines = csv.trim().split('\n');
+            if (lines.length < 2) return [];
+            
+            const trades = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                if (values.length >= 7) {
+                    trades.push({
+                        date: values[0],
+                        symbol: values[1],
+                        type: values[2],
+                        lots: parseFloat(values[3]),
+                        entry: parseFloat(values[4]),
+                        exit: parseFloat(values[5]),
+                        profit: parseFloat(values[6])
+                    });
+                }
+            }
+            return trades.reverse();
         }
+        
+        function displayTrades(trades) {
+            const tbody = document.getElementById('tradesBody');
+            
+            if (trades.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No trades yet</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = trades.map(trade => `
+                <tr>
+                    <td>${trade.date}</td>
+                    <td><span class="symbol-badge">${trade.symbol}</span></td>
+                    <td class="${trade.type.toLowerCase() === 'buy' ? 'trade-buy' : 'trade-sell'}">${trade.type}</td>
+                    <td>${trade.lots.toFixed(2)}</td>
+                    <td>${trade.entry.toFixed(2)}</td>
+                    <td>${trade.exit.toFixed(2)}</td>
+                    <td class="${trade.profit >= 0 ? 'profit-positive' : 'profit-negative'}">£${trade.profit.toFixed(2)}</td>
+                </tr>
+            `).join('');
+        }
+        
+        function calculateStats(trades) {
+            if (trades.length === 0) return;
+            
+            const totalProfit = trades.reduce((sum, t) => sum + t.profit, 0);
+            const wins = trades.filter(t => t.profit > 0).length;
+            const winRate = (wins / trades.length * 100).toFixed(0);
+            
+            const profitEl = document.getElementById('totalProfit');
+            profitEl.textContent = '£' + totalProfit.toFixed(2);
+            profitEl.className = 'stat-value' + (totalProfit < 0 ? ' negative' : '');
+            
+            document.getElementById('winRate').textContent = winRate + '%';
+            document.getElementById('totalTrades').textContent = trades.length;
+        }
+        
+        function drawEquityCurve(points) {
+            const width = 800;
+            const height = 150;
+            const padding = 10;
+            
+            const min = Math.min(...points) * 0.98;
+            const max = Math.max(...points) * 1.02;
+            const xStep = width / (points.length - 1);
+            const yScale = (height - padding * 2) / (max - min);
+            
+            let linePath = '';
+            let areaPath = '';
+            
+            points.forEach((val, i) => {
+                const x = i * xStep;
+                const y = height - padding - (val - min) * yScale;
+                
+                if (i === 0) {
+                    linePath += `M${x},${y}`;
+                    areaPath += `M${x},${y}`;
+                } else {
+                    linePath += ` L${x},${y}`;
+                    areaPath += ` L${x},${y}`;
+                }
+            });
+            
+            areaPath += ` L${width},${height} L0,${height} Z`;
+            
+            document.getElementById('eqLine').setAttribute('d', linePath);
+            document.getElementById('eqArea').setAttribute('d', areaPath);
+        }
+        
+        loadData();
+        setInterval(loadData, 5 * 60 * 1000);
     </script>
 </body>
 </html>
