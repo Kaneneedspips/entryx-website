@@ -8,45 +8,47 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; background: #0a0e14; color: #e8eaed; line-height: 1.6; overflow-x: hidden; }
         
-        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10, 14, 20, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(203, 255, 56, 0.1); }
-        .nav-container { max-width: 1400px; margin: 0 auto; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 24px; font-weight: 900; color: #cbff38; text-decoration: none; }
-        .nav-links { display: flex; gap: 40px; }
-        .nav-links a { color: #94a3b8; text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 20px 60px; background: rgba(15, 17, 23, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(203, 255, 56, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 28px; font-weight: 900; color: #cbff38; letter-spacing: -1px; text-decoration: none; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease; }
         .nav-links a:hover { color: #cbff38; }
+        .nav-links a.active { color: #cbff38; }
         
-        .hero { min-height: 100vh; display: flex; padding: 120px 40px 60px; position: relative; overflow: hidden; }
+        .hero { min-height: 100vh; display: flex; padding: 120px 60px 60px; position: relative; overflow: hidden; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); }
         .hero-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; width: 100%; gap: 60px; }
         
-        .hero-left { flex: 1; max-width: 600px; }
-        .hero-title { font-size: 52px; font-weight: 800; color: #ffffff; margin-bottom: 20px; letter-spacing: -2px; line-height: 1.1; }
+        .floating-orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 400px; height: 400px; background: rgba(203, 255, 56, 0.08); top: 10%; right: 20%; animation: float1 20s ease-in-out infinite; }
+        .orb-2 { width: 350px; height: 350px; background: rgba(124, 58, 237, 0.1); bottom: 10%; right: 30%; animation: float2 18s ease-in-out infinite; }
+        @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 20px); } }
+        @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-20px, -30px); } }
+        
+        .hero-left { flex: 1; max-width: 600px; position: relative; z-index: 1; }
+        .hero-title { font-size: 52px; font-weight: 900; color: #ffffff; margin-bottom: 20px; letter-spacing: -2px; line-height: 1.1; }
         .hero-title .gradient-text { background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         .hero-subtitle { font-size: 18px; color: #94a3b8; margin-bottom: 40px; line-height: 1.7; }
         
         .stats-showcase { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 40px; }
-        .stat-item { position: relative; background: rgba(30, 41, 59, 0.6); border-radius: 12px; padding: 24px; transition: all 0.3s ease; }
+        .stat-item { position: relative; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); border-radius: 12px; padding: 24px; transition: all 0.4s ease; }
         .stat-item::before { content: ''; position: absolute; inset: 0; border-radius: 12px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-        .stat-item:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(203, 255, 56, 0.1); }
+        .stat-item:hover { transform: translateY(-6px); box-shadow: 0 15px 40px rgba(203, 255, 56, 0.08); }
         .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 600; }
         .stat-value { font-size: 36px; font-weight: 800; color: #cbff38; line-height: 1.2; }
         .stat-subtitle { font-size: 12px; color: #94a3b8; margin-top: 4px; }
         
         .feature-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 35px; }
-        .badge { position: relative; background: rgba(203, 255, 56, 0.1); padding: 8px 16px; border-radius: 50px; font-size: 12px; color: #cbff38; font-weight: 600; }
+        .badge { position: relative; background: rgba(203, 255, 56, 0.1); padding: 8px 16px; border-radius: 50px; font-size: 12px; color: #cbff38; font-weight: 600; transition: all 0.3s ease; }
         .badge::before { content: ''; position: absolute; inset: 0; border-radius: 50px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .badge:hover { transform: translateY(-2px); }
         
         .cta-group { display: flex; gap: 15px; flex-wrap: wrap; }
         .btn-primary { background: #cbff38; color: #0a0e14; padding: 16px 32px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 15px; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(203, 255, 56, 0.3); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(203, 255, 56, 0.3); }
         .btn-secondary { background: transparent; color: #ffffff; padding: 16px 32px; border-radius: 50px; font-weight: 600; text-decoration: none; font-size: 15px; border: 1px solid rgba(203, 255, 56, 0.3); transition: all 0.3s ease; }
-        .btn-secondary:hover { background: rgba(203, 255, 56, 0.1); border-color: #cbff38; }
+        .btn-secondary:hover { background: rgba(203, 255, 56, 0.1); border-color: #cbff38; transform: translateY(-2px); }
         
-        .hero-right { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
-        
-        .orb-1 { position: absolute; top: 0%; right: 0%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(203, 255, 56, 0.1) 0%, transparent 70%); border-radius: 50%; filter: blur(80px); animation: float1 15s ease-in-out infinite; }
-        .orb-2 { position: absolute; bottom: 10%; left: 0%; width: 350px; height: 350px; background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%); border-radius: 50%; filter: blur(70px); animation: float2 12s ease-in-out infinite; }
-        @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-30px, 20px); } }
-        @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(20px, -30px); } }
+        .hero-right { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
         
         .rocket-section { position: relative; z-index: 1; text-align: center; margin-bottom: 30px; }
         .rocket-container { animation: rocketFloat 4s ease-in-out infinite; }
@@ -72,7 +74,8 @@
         .equity-line { fill: none; stroke: url(#equityGradient); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 8px rgba(203, 255, 56, 0.4)); }
         .equity-area { fill: url(#equityAreaGradient); }
         
-        .footer { border-top: 1px solid rgba(203, 255, 56, 0.1); padding: 40px; text-align: center; color: #64748b; }
+        .footer { padding: 40px 60px; background: #0a0e14; text-align: center; border-top: 1px solid rgba(203, 255, 56, 0.1); }
+        .footer p { color: #64748b; font-size: 13px; }
         
         @media (max-width: 1024px) {
             .hero-container { flex-direction: column; text-align: center; }
@@ -83,27 +86,29 @@
             .hero-right { margin-top: 60px; }
         }
         
-        @media (max-width: 600px) {
+        @media (max-width: 968px) {
+            .header { padding: 15px 30px; flex-direction: column; gap: 15px; }
+            .hero { padding: 120px 30px 50px; }
             .hero-title { font-size: 36px; }
             .stats-showcase { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
-            .hero { padding: 100px 20px 40px; }
+            .footer { padding: 30px; }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <nav class="nav-container">
-            <a href="index.html" class="logo">ENTRYX</a>
-            <div class="nav-links">
-                <a href="features.html">Features</a>
-                <a href="pricing.html">Pricing</a>
-                <a href="live-journal.html">Live Journal</a>
-            </div>
+    <div class="header">
+        <a href="index.html" class="logo">ENTRYX</a>
+        <nav class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="features.html">Our EA's</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="live-journal.html">Live Journal</a>
         </nav>
-    </header>
+    </div>
     
     <section class="hero">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
         <div class="hero-container">
             <div class="hero-left">
                 <h1 class="hero-title">Stop Trading Manually.<br>Let the <span class="gradient-text">EA</span> Work.</h1>
@@ -147,9 +152,6 @@
             </div>
             
             <div class="hero-right">
-                <div class="orb-1"></div>
-                <div class="orb-2"></div>
-                
                 <div class="rocket-section">
                     <div class="rocket-container">
                         <div class="rocket-icon">
@@ -210,9 +212,9 @@
         </div>
     </section>
     
-    <footer class="footer">
-        <p>© 2024 EntryX. All rights reserved.</p>
-    </footer>
+    <div class="footer">
+        <p>© 2025 EntryX. All rights reserved.</p>
+    </div>
     
     <script>
         async function loadEquityData() {
