@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - EntryX</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; background: #0a0e14; color: #e8eaed; line-height: 1.6; }
+        
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(10, 14, 20, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(203, 255, 56, 0.1); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 900; color: #cbff38; text-decoration: none; }
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a { color: #94a3b8; text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .nav-links a:hover, .nav-links a.active { color: #cbff38; }
+        
+        .hero { padding: 140px 40px 80px; text-align: center; position: relative; overflow: hidden; }
+        .orb-1 { position: absolute; top: 10%; left: 10%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(203, 255, 56, 0.08) 0%, transparent 70%); border-radius: 50%; filter: blur(60px); }
+        .orb-2 { position: absolute; bottom: 20%; right: 10%; width: 250px; height: 250px; background: radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, transparent 70%); border-radius: 50%; filter: blur(50px); }
+        .hero h1 { font-size: 52px; font-weight: 800; margin-bottom: 20px; position: relative; z-index: 1; }
+        .hero h1 span { background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 20px; color: #94a3b8; max-width: 600px; margin: 0 auto; position: relative; z-index: 1; }
+        
+        .features-section { max-width: 1200px; margin: 0 auto; padding: 80px 40px; }
+        .section-title { text-align: center; margin-bottom: 60px; }
+        .section-title h2 { font-size: 36px; font-weight: 800; color: #ffffff; margin-bottom: 15px; }
+        .section-title p { color: #94a3b8; font-size: 18px; }
+        
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 80px; }
+        .feature-card { position: relative; background: rgba(30, 41, 59, 0.4); border-radius: 20px; padding: 35px; transition: all 0.4s ease; }
+        .feature-card::before { content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .feature-card:hover { transform: translateY(-5px); }
+        .feature-card h3 { color: #cbff38; font-size: 20px; margin-bottom: 15px; }
+        .feature-card p { color: #94a3b8; font-size: 15px; line-height: 1.7; }
+        
+        .how-it-works { background: rgba(30, 41, 59, 0.2); padding: 80px 40px; }
+        .how-it-works-content { max-width: 1200px; margin: 0 auto; }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 60px; }
+        .step { text-align: center; }
+        .step-number { width: 60px; height: 60px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; color: #0a0e14; margin: 0 auto 20px; }
+        .step h3 { color: #ffffff; font-size: 20px; margin-bottom: 10px; }
+        .step p { color: #94a3b8; font-size: 15px; }
+        
+        .journal-section { max-width: 1200px; margin: 0 auto; padding: 80px 40px; }
+        .journal-wrapper { position: relative; background: rgba(30, 41, 59, 0.4); border-radius: 20px; padding: 30px; }
+        .journal-wrapper::before { content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .journal-wrapper iframe { width: 100%; height: 600px; border: none; border-radius: 12px; }
+        
+        .cta-section { text-align: center; padding: 80px 40px; }
+        .cta-section h2 { font-size: 36px; font-weight: 800; color: #ffffff; margin-bottom: 20px; }
+        .cta-section p { color: #94a3b8; font-size: 18px; margin-bottom: 30px; }
+        .btn-primary { background: #cbff38; color: #0a0e14; padding: 18px 40px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 16px; display: inline-block; transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(203, 255, 56, 0.3); }
+        
+        .footer { border-top: 1px solid rgba(203, 255, 56, 0.1); padding: 40px; text-align: center; color: #64748b; }
+        
+        @media (max-width: 968px) {
+            .features-grid, .steps { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 36px; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">ENTRYX</a>
+            <div class="nav-links">
+                <a href="features.html" class="active">Features</a>
+                <a href="pricing.html">Pricing</a>
+                <a href="live-journal.html">Live Journal</a>
+            </div>
+        </nav>
+    </header>
+    
+    <section class="hero">
+        <div class="orb-1"></div>
+        <div class="orb-2"></div>
+        <h1>Powerful <span>Features</span></h1>
+        <p>Everything you need for automated trading success on Gold and NAS100</p>
+    </section>
+    
+    <section class="features-section">
+        <div class="section-title">
+            <h2>What Makes EntryX Different</h2>
+            <p>Built by traders, for traders</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>High Probability Levels</h3>
+                <p>Our proprietary algorithm identifies key price levels where the market is most likely to move. Razor uses 2 HP levels, Power uses 3 for more opportunities.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Gold & NAS100</h3>
+                <p>Both EAs trade Gold (XAUUSD) and NAS100. Two of the most liquid and profitable markets, optimized for our specific entry criteria.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Risk Management</h3>
+                <p>Built in risk controls keep your account safe. Prop firm friendly settings ensure you stay within drawdown limits at all times.</p>
+            </div>
+            <div class="feature-card">
+                <h3>24/5 Automation</h3>
+                <p>Completely hands free trading around the clock. Set it up once and let the EA work while you focus on other things.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Minimal Exposure</h3>
+                <p>Only exposed to the market around 2 hours per day. Less time in trades means less risk while still capturing profitable moves.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Live Performance</h3>
+                <p>Transparent results updated in real time. Track every trade and see exactly how the EA performs on live markets.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="how-it-works">
+        <div class="how-it-works-content">
+            <div class="section-title">
+                <h2>How It Works</h2>
+                <p>Get started in minutes</p>
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Subscribe</h3>
+                    <p>Choose Razor or Power plan and get instant access to your EA files and setup guide.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Install</h3>
+                    <p>Follow our video guide to install the EA on your MT5 platform. Takes about 5 minutes.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Trade</h3>
+                    <p>The EA handles everything automatically. Just monitor your results and watch your account grow.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="journal-section">
+        <div class="section-title">
+            <h2>Live Trading Results</h2>
+            <p>Real trades from our live account, updated automatically</p>
+        </div>
+        <div class="journal-wrapper">
+            <iframe src="https://entryx-live-report.vercel.app" title="Live Trading Journal"></iframe>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <h2>Ready to Automate Your Trading?</h2>
+        <p>Join traders who are already using EntryX to grow their accounts</p>
+        <a href="pricing.html" class="btn-primary">View Pricing →</a>
+    </section>
+    
+    <footer class="footer">
+        <p>© 2024 EntryX. All rights reserved.</p>
+    </footer>
+</body>
+</html>
