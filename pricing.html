@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EntryX Pricing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; background: #0a0e14; color: #e8eaed; line-height: 1.6; }
+        
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 20px 60px; background: rgba(15, 17, 23, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(203, 255, 56, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 28px; font-weight: 900; color: #cbff38; letter-spacing: -1px; text-decoration: none; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease; }
+        .nav-links a:hover { color: #cbff38; }
+        .nav-links a.active { color: #cbff38; }
+        
+        .pricing-hero { padding: 140px 60px 60px; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); text-align: center; position: relative; overflow: hidden; }
+        .floating-orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 300px; height: 300px; background: rgba(203, 255, 56, 0.08); top: 0; left: 20%; animation: float1 20s ease-in-out infinite; }
+        .orb-2 { width: 250px; height: 250px; background: rgba(124, 58, 237, 0.1); bottom: -80px; right: 20%; animation: float2 18s ease-in-out infinite; }
+        @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 20px); } }
+        @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-20px, -30px); } }
+        .pricing-hero-content { position: relative; z-index: 1; }
+        .pricing-hero h1 { font-size: 52px; font-weight: 900; margin-bottom: 15px; letter-spacing: -2px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .pricing-hero p { font-size: 20px; color: #94a3b8; }
+        
+        .pricing-container { padding: 80px 60px; background: #0f1117; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; max-width: 900px; margin: 0 auto; }
+        .pricing-card { position: relative; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); border-radius: 20px; padding: 40px; transition: all 0.4s ease; }
+        .pricing-card::before { content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .pricing-card:hover { transform: translateY(-6px); box-shadow: 0 15px 40px rgba(203, 255, 56, 0.08); }
+        .pricing-card.featured:hover { box-shadow: 0 15px 40px rgba(124, 58, 237, 0.15); }
+        .popular-tag { position: absolute; top: 20px; right: 20px; background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); color: #ffffff; padding: 6px 14px; border-radius: 50px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .plan-name { font-size: 28px; font-weight: 800; color: #ffffff; margin-bottom: 8px; }
+        .plan-description { color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
+        .plan-price { margin-bottom: 30px; }
+        .price-amount { font-size: 48px; font-weight: 900; color: #cbff38; }
+        .pricing-card.featured .price-amount { color: #a78bfa; }
+        .price-period { color: #64748b; font-size: 16px; }
+        .plan-features { list-style: none; margin-bottom: 35px; }
+        .plan-features li { padding: 12px 0; border-bottom: 1px solid rgba(203, 255, 56, 0.08); color: #e8eaed; font-size: 14px; display: flex; align-items: center; gap: 12px; }
+        .plan-features li:last-child { border-bottom: none; }
+        .check-icon { color: #cbff38; font-weight: bold; }
+        .pricing-card.featured .check-icon { color: #a78bfa; }
+        .btn-plan { display: block; text-align: center; padding: 16px 30px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 15px; transition: all 0.3s ease; }
+        .pricing-card:not(.featured) .btn-plan { background: #cbff38; color: #0a0e14; }
+        .pricing-card:not(.featured) .btn-plan:hover { box-shadow: 0 8px 30px rgba(203, 255, 56, 0.3); transform: translateY(-2px); }
+        .pricing-card.featured .btn-plan { background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); color: #ffffff; }
+        .pricing-card.featured .btn-plan:hover { box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3); transform: translateY(-2px); }
+        
+        .faq-section { padding: 80px 60px; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); }
+        .section-title { font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 50px; color: #ffffff; }
+        .section-title span { background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .faq-grid { max-width: 800px; margin: 0 auto; }
+        .faq-item { position: relative; background: rgba(30, 41, 59, 0.4); border-radius: 12px; padding: 24px; margin-bottom: 16px; transition: all 0.3s ease; }
+        .faq-item::before { content: ''; position: absolute; inset: 0; border-radius: 12px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.3; }
+        .faq-item:hover::before { opacity: 0.6; }
+        .faq-item h4 { color: #ffffff; font-size: 16px; margin-bottom: 10px; }
+        .faq-item p { color: #94a3b8; font-size: 14px; }
+        
+        .footer { padding: 40px 60px; background: #0a0e14; text-align: center; border-top: 1px solid rgba(203, 255, 56, 0.1); }
+        .footer p { color: #64748b; font-size: 13px; }
+        
+        @media (max-width: 968px) { .header { padding: 15px 30px; flex-direction: column; gap: 15px; } .pricing-hero { padding: 120px 30px 50px; } .pricing-container, .faq-section, .footer { padding: 50px 30px; } .pricing-hero h1 { font-size: 36px; } .pricing-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="logo">ENTRYX</a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="features.html">Our EA's</a>
+            <a href="pricing.html" class="active">Pricing</a>
+            <a href="live-journal.html">Live Journal</a>
+        </nav>
+    </div>
+    
+    <div class="pricing-hero">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="pricing-hero-content">
+            <h1>Simple Pricing</h1>
+            <p>Choose the package that fits your trading style</p>
+        </div>
+    </div>
+    
+    <div class="pricing-container">
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="plan-name">EntryX Razor</div>
+                <div class="plan-description">2 High Probability Levels</div>
+                <div class="plan-price">
+                    <span class="price-amount">£79</span>
+                    <span class="price-period">/month</span>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check-icon">✓</span> Gold & NAS100 Trading</li>
+                    <li><span class="check-icon">✓</span> 2 HP Entry Levels</li>
+                    <li><span class="check-icon">✓</span> Prop Firm Friendly</li>
+                    <li><span class="check-icon">✓</span> Video Setup Guide</li>
+                    <li><span class="check-icon">✓</span> 24/7 Support</li>
+                </ul>
+                <a href="#" class="btn-plan">Get Started</a>
+            </div>
+            <div class="pricing-card featured">
+                <div class="popular-tag">Most Popular</div>
+                <div class="plan-name">EntryX Power</div>
+                <div class="plan-description">3 High Probability Levels</div>
+                <div class="plan-price">
+                    <span class="price-amount">£99</span>
+                    <span class="price-period">/month</span>
+                </div>
+                <ul class="plan-features">
+                    <li><span class="check-icon">✓</span> Gold & NAS100 Trading</li>
+                    <li><span class="check-icon">✓</span> 3 HP Entry Levels</li>
+                    <li><span class="check-icon">✓</span> Prop Firm Friendly</li>
+                    <li><span class="check-icon">✓</span> Video Setup Guide</li>
+                    <li><span class="check-icon">✓</span> Priority 24/7 Support</li>
+                    <li><span class="check-icon">✓</span> More Trading Opportunities</li>
+                </ul>
+                <a href="#" class="btn-plan">Get Started</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="faq-section">
+        <h2 class="section-title">Frequently <span>Asked</span></h2>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <h4>What broker should I use?</h4>
+                <p>The EA works with any MT5 broker. We recommend brokers with low spreads on NAS100 and Gold for best results.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Do I need a VPS?</h4>
+                <p>Yes, we recommend a VPS for 24/5 uninterrupted trading. We provide a full video guide on how to set this up.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Is it prop firm friendly?</h4>
+                <p>Absolutely. The EA is designed with prop firm rules in mind. Low drawdown and consistent performance.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How much capital do I need?</h4>
+                <p>You can start with as little as $500, but we recommend $1000+ for optimal risk management.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>© 2025 EntryX. All rights reserved.</p>
+    </div>
+</body>
+</html>

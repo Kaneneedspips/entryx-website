@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EntryX - Our Trading EA's</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; background: #0a0e14; color: #e8eaed; line-height: 1.6; }
+        
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 20px 60px; background: rgba(15, 17, 23, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(203, 255, 56, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 28px; font-weight: 900; color: #cbff38; letter-spacing: -1px; text-decoration: none; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease; }
+        .nav-links a:hover { color: #cbff38; }
+        .nav-links a.active { color: #cbff38; }
+        
+        .hero-section { padding: 140px 60px 80px; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); text-align: center; position: relative; overflow: hidden; }
+        .floating-orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 300px; height: 300px; background: rgba(203, 255, 56, 0.08); top: 0; left: 10%; animation: float1 20s ease-in-out infinite; }
+        .orb-2 { width: 250px; height: 250px; background: rgba(124, 58, 237, 0.1); bottom: -50px; right: 15%; animation: float2 18s ease-in-out infinite; }
+        @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 20px); } }
+        @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-20px, -30px); } }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-section h1 { font-size: 52px; font-weight: 900; margin-bottom: 20px; letter-spacing: -2px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-section p { font-size: 18px; color: #94a3b8; max-width: 600px; margin: 0 auto; }
+        
+        .what-it-does { padding: 80px 60px; background: #0f1117; }
+        .section-title { font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 50px; color: #ffffff; }
+        .section-title span { background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1200px; margin: 0 auto; }
+        .feature-card { position: relative; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); border-radius: 16px; padding: 32px; transition: all 0.4s ease; }
+        .feature-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .feature-card:hover { transform: translateY(-6px); box-shadow: 0 15px 40px rgba(203, 255, 56, 0.08); }
+        .feature-card h3 { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 12px; }
+        .feature-card p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
+        
+        .arrow-indicator { position: absolute; right: -14px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; background: linear-gradient(135deg, #cbff38, #7c3aed); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0a0e14; font-size: 14px; font-weight: bold; z-index: 10; animation: arrowPulse 2s ease-in-out infinite; }
+        .feature-card:nth-child(3) .arrow-indicator, .feature-card:nth-child(6) .arrow-indicator { display: none; }
+        @keyframes arrowPulse { 0%, 100% { transform: translateY(-50%) translateX(0); } 50% { transform: translateY(-50%) translateX(4px); } }
+        
+        .how-it-works { padding: 80px 60px; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); }
+        .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1000px; margin: 0 auto; }
+        .step-card { text-align: center; }
+        .step-number { width: 60px; height: 60px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; color: #0a0e14; margin: 0 auto 24px; }
+        .step-card:nth-child(2) .step-number { background: linear-gradient(135deg, #7c3aed 0%, #cbff38 100%); }
+        .step-card h3 { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 12px; }
+        .step-card p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
+        
+        .live-results { padding: 80px 60px; background: #0f1117; }
+        .section-subtitle { text-align: center; color: #64748b; margin-top: -35px; margin-bottom: 40px; font-size: 16px; }
+        .results-container { position: relative; max-width: 1400px; margin: 0 auto; background: #1a1d29; border-radius: 16px; overflow: hidden; }
+        .results-container::before { content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+        .results-container iframe { width: 100%; height: 800px; border: none; }
+        .results-disclaimer { text-align: center; color: #64748b; font-size: 12px; margin-top: 20px; }
+        
+        .cta-section { padding: 80px 60px; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); text-align: center; border-top: 1px solid rgba(203, 255, 56, 0.1); }
+        .cta-section h2 { font-size: 42px; font-weight: 900; margin-bottom: 15px; letter-spacing: -2px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .cta-section p { font-size: 18px; color: #94a3b8; margin-bottom: 35px; }
+        .btn-large { background: #cbff38; color: #0a0e14; padding: 18px 40px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 16px; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; }
+        .btn-large:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(203, 255, 56, 0.3); }
+        
+        .footer { padding: 40px 60px; background: #0a0e14; text-align: center; border-top: 1px solid rgba(203, 255, 56, 0.1); }
+        .footer p { color: #64748b; font-size: 13px; }
+        
+        @media (max-width: 1100px) { .features-grid { grid-template-columns: repeat(2, 1fr); } .feature-card:nth-child(2) .arrow-indicator, .feature-card:nth-child(4) .arrow-indicator { display: none; } }
+        @media (max-width: 968px) { .header { padding: 15px 30px; } .hero-section { padding: 120px 30px 50px; } .what-it-does, .how-it-works, .cta-section, .footer, .live-results { padding: 50px 30px; } .hero-section h1 { font-size: 36px; } .section-title { font-size: 28px; } .features-grid { grid-template-columns: 1fr; } .steps-grid { grid-template-columns: 1fr; } .arrow-indicator { display: none !important; } .header { flex-direction: column; gap: 15px; } .results-container iframe { height: 500px; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="logo">ENTRYX</a>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="features.html" class="active">Our EA's</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="live-journal.html">Live Journal</a>
+        </nav>
+    </div>
+    
+    <div class="hero-section">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="hero-content">
+            <h1>Our Trading EA's</h1>
+            <p>Professional automated trading systems designed for consistent performance and prop firm compliance.</p>
+        </div>
+    </div>
+    
+    <div class="what-it-does">
+        <h2 class="section-title">What <span>EntryX</span> Does</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>High Probability Levels</h3>
+                <p>Our proprietary algorithm identifies key price levels where the market is most likely to move. Razor uses 2 HP levels, Power uses 3 for more opportunities.</p>
+                <span class="arrow-indicator">→</span>
+            </div>
+            <div class="feature-card">
+                <h3>Gold & NAS100</h3>
+                <p>Both EAs trade Gold (XAUUSD) and NAS100. Two of the most liquid and profitable markets, optimized for our specific entry criteria.</p>
+                <span class="arrow-indicator">→</span>
+            </div>
+            <div class="feature-card">
+                <h3>Risk Management</h3>
+                <p>Built in risk controls keep your account safe. Prop firm friendly settings ensure you stay within drawdown limits at all times.</p>
+                <span class="arrow-indicator">→</span>
+            </div>
+            <div class="feature-card">
+                <h3>24/5 Automation</h3>
+                <p>Completely hands free trading around the clock. Set it up once and let the EA work while you focus on other things.</p>
+                <span class="arrow-indicator">→</span>
+            </div>
+            <div class="feature-card">
+                <h3>Minimal Exposure</h3>
+                <p>Only exposed to the market around 2 hours per day. Less time in trades means less risk while still capturing profitable moves.</p>
+                <span class="arrow-indicator">→</span>
+            </div>
+            <div class="feature-card">
+                <h3>Live Performance</h3>
+                <p>Transparent results updated in real time. Track every trade and see exactly how the EA performs on live markets.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="how-it-works">
+        <h2 class="section-title">How It <span>Works</span></h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Download & Install</h3>
+                <p>Get the EA file and install on MT5. Video setup guide provided with step by step instructions. 24/7 support available if you need help.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>VPS Setup</h3>
+                <p>Install on a VPS for 24/5 uninterrupted trading. Full video guide included showing exactly how to configure everything.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Set Risk & Trade</h3>
+                <p>Configure your risk settings and let it run. Advanced trade management system locks in profits automatically while you relax.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="live-results">
+        <h2 class="section-title">Live <span>Journal</span></h2>
+        <p class="section-subtitle">Real time results from our £1,000 trading account • Updates automatically</p>
+        <div class="results-container">
+            <iframe src="https://subtle-vacherin-d44a0d.netlify.app/EntryXAlgo.html" frameborder="0"></iframe>
+        </div>
+        <p class="results-disclaimer">Past performance does not guarantee future results. Trading results may vary based on broker, market conditions, and execution quality.</p>
+    </div>
+    
+    <div class="cta-section">
+        <h2>Ready to Automate?</h2>
+        <p>Choose the package that fits your trading style</p>
+        <a href="pricing.html" class="btn-large">View Pricing<span>→</span></a>
+    </div>
+    
+    <div class="footer">
+        <p>© 2025 EntryX. All rights reserved.</p>
+    </div>
+</body>
+</html>
