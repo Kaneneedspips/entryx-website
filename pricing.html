@@ -6,67 +6,184 @@
     <title>EntryX Pricing</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; background: #0a0e14; color: #e8eaed; line-height: 1.6; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
+            background: #0a0e14; 
+            color: #e8eaed; 
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
         
-        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 20px 60px; background: rgba(15, 17, 23, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(203, 255, 56, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        /* Full page pulsating gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(203, 255, 56, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(203, 255, 56, 0.03) 0%, transparent 70%),
+                linear-gradient(135deg, #0a0e14 0%, #1a1d29 50%, #0f1117 100%);
+            z-index: -2;
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes bgPulse {
+            0%, 100% { 
+                background: 
+                    radial-gradient(ellipse at 20% 20%, rgba(203, 255, 56, 0.08) 0%, transparent 50%),
+                    radial-gradient(ellipse at 80% 80%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                    radial-gradient(ellipse at 50% 50%, rgba(203, 255, 56, 0.03) 0%, transparent 70%),
+                    linear-gradient(135deg, #0a0e14 0%, #1a1d29 50%, #0f1117 100%);
+            }
+            25% { 
+                background: 
+                    radial-gradient(ellipse at 30% 30%, rgba(203, 255, 56, 0.12) 0%, transparent 50%),
+                    radial-gradient(ellipse at 70% 70%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                    radial-gradient(ellipse at 60% 40%, rgba(124, 58, 237, 0.05) 0%, transparent 70%),
+                    linear-gradient(135deg, #0a0e14 0%, #1a1d29 50%, #0f1117 100%);
+            }
+            50% { 
+                background: 
+                    radial-gradient(ellipse at 40% 60%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+                    radial-gradient(ellipse at 60% 30%, rgba(203, 255, 56, 0.1) 0%, transparent 50%),
+                    radial-gradient(ellipse at 30% 70%, rgba(203, 255, 56, 0.06) 0%, transparent 70%),
+                    linear-gradient(135deg, #0a0e14 0%, #1a1d29 50%, #0f1117 100%);
+            }
+            75% { 
+                background: 
+                    radial-gradient(ellipse at 70% 40%, rgba(203, 255, 56, 0.1) 0%, transparent 50%),
+                    radial-gradient(ellipse at 30% 60%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+                    radial-gradient(ellipse at 50% 20%, rgba(124, 58, 237, 0.04) 0%, transparent 70%),
+                    linear-gradient(135deg, #0a0e14 0%, #1a1d29 50%, #0f1117 100%);
+            }
+        }
+        
+        .floating-orb { position: fixed; border-radius: 50%; filter: blur(100px); z-index: -1; pointer-events: none; }
+        .orb-1 { width: 500px; height: 500px; background: rgba(203, 255, 56, 0.06); top: 10%; left: 5%; animation: floatOrb1 25s ease-in-out infinite; }
+        .orb-2 { width: 400px; height: 400px; background: rgba(124, 58, 237, 0.08); bottom: 10%; right: 5%; animation: floatOrb2 20s ease-in-out infinite; }
+        .orb-3 { width: 300px; height: 300px; background: rgba(203, 255, 56, 0.04); top: 50%; left: 50%; animation: floatOrb3 22s ease-in-out infinite; }
+        @keyframes floatOrb1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(50px, 30px); } }
+        @keyframes floatOrb2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-40px, -40px); } }
+        @keyframes floatOrb3 { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-40%, -60%); } }
+        
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 20px 60px; background: rgba(15, 17, 23, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(203, 255, 56, 0.1); display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 28px; font-weight: 900; color: #cbff38; letter-spacing: -1px; text-decoration: none; }
         .nav-links { display: flex; gap: 30px; }
         .nav-links a { color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease; }
         .nav-links a:hover { color: #cbff38; }
         .nav-links a.active { color: #cbff38; }
         
-        .pricing-hero { padding: 140px 60px 60px; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); text-align: center; position: relative; overflow: hidden; }
-        .floating-orb { position: absolute; border-radius: 50%; filter: blur(80px); }
-        .orb-1 { width: 300px; height: 300px; background: rgba(203, 255, 56, 0.08); top: 0; left: 20%; animation: float1 20s ease-in-out infinite; }
-        .orb-2 { width: 250px; height: 250px; background: rgba(124, 58, 237, 0.1); bottom: -80px; right: 20%; animation: float2 18s ease-in-out infinite; }
-        @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 20px); } }
-        @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-20px, -30px); } }
-        .pricing-hero-content { position: relative; z-index: 1; }
-        .pricing-hero h1 { font-size: 52px; font-weight: 900; margin-bottom: 15px; letter-spacing: -2px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .pricing-hero p { font-size: 20px; color: #94a3b8; }
+        .content { position: relative; z-index: 1; }
         
-        .pricing-container { padding: 80px 60px; background: #0f1117; }
-        .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; max-width: 900px; margin: 0 auto; }
-        .pricing-card { position: relative; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); border-radius: 20px; padding: 40px; transition: all 0.4s ease; }
-        .pricing-card::before { content: ''; position: absolute; inset: 0; border-radius: 20px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
-        .pricing-card:hover { transform: translateY(-6px); box-shadow: 0 15px 40px rgba(203, 255, 56, 0.08); }
-        .pricing-card.featured:hover { box-shadow: 0 15px 40px rgba(124, 58, 237, 0.15); }
-        .popular-tag { position: absolute; top: 20px; right: 20px; background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); color: #ffffff; padding: 6px 14px; border-radius: 50px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .plan-name { font-size: 28px; font-weight: 800; color: #ffffff; margin-bottom: 8px; }
-        .plan-description { color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
-        .plan-price { margin-bottom: 30px; }
-        .price-amount { font-size: 48px; font-weight: 900; color: #cbff38; }
+        .hero-section { padding: 160px 60px 80px; text-align: center; }
+        .hero-section h1 { font-size: 56px; font-weight: 900; margin-bottom: 15px; letter-spacing: -2px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-section p { font-size: 20px; color: #94a3b8; }
+        
+        /* Limited access banner */
+        .limited-banner {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(203, 255, 56, 0.1);
+            border: 1px solid rgba(203, 255, 56, 0.3);
+            padding: 12px 24px;
+            border-radius: 50px;
+            margin-bottom: 30px;
+        }
+        .limited-banner .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: #cbff38;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .limited-banner span {
+            color: #cbff38;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Split pricing layout */
+        .pricing-section { padding: 40px 60px 80px; max-width: 1200px; margin: 0 auto; }
+        .pricing-row { display: flex; align-items: stretch; gap: 40px; }
+        
+        .pricing-card { flex: 1; position: relative; background: rgba(26, 29, 41, 0.6); backdrop-filter: blur(10px); border-radius: 24px; padding: 40px; transition: all 0.4s ease; display: flex; flex-direction: column; }
+        .pricing-card::before { content: ''; position: absolute; inset: 0; border-radius: 24px; padding: 1px; background: linear-gradient(135deg, rgba(203, 255, 56, 0.5) 0%, rgba(124, 58, 237, 0.5) 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .pricing-card:hover { transform: translateY(-8px); box-shadow: 0 25px 60px rgba(203, 255, 56, 0.1); }
+        .pricing-card.featured:hover { box-shadow: 0 25px 60px rgba(124, 58, 237, 0.15); }
+        
+        .popular-tag { position: absolute; top: -12px; right: 30px; background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); color: #ffffff; padding: 8px 18px; border-radius: 50px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        
+        .plan-name { font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 8px; }
+        .plan-description { color: #94a3b8; font-size: 15px; margin-bottom: 30px; }
+        .plan-price { margin-bottom: 35px; }
+        .price-amount { font-size: 56px; font-weight: 900; color: #cbff38; }
         .pricing-card.featured .price-amount { color: #a78bfa; }
-        .price-period { color: #64748b; font-size: 16px; }
-        .plan-features { list-style: none; margin-bottom: 35px; }
-        .plan-features li { padding: 12px 0; border-bottom: 1px solid rgba(203, 255, 56, 0.08); color: #e8eaed; font-size: 14px; display: flex; align-items: center; gap: 12px; }
+        .price-period { color: #64748b; font-size: 18px; }
+        
+        .plan-features { list-style: none; margin-bottom: 40px; flex-grow: 1; }
+        .plan-features li { padding: 14px 0; border-bottom: 1px solid rgba(203, 255, 56, 0.08); color: #e8eaed; font-size: 15px; display: flex; align-items: center; gap: 14px; }
         .plan-features li:last-child { border-bottom: none; }
-        .check-icon { color: #cbff38; font-weight: bold; }
+        .check-icon { color: #cbff38; font-weight: bold; font-size: 18px; }
         .pricing-card.featured .check-icon { color: #a78bfa; }
-        .btn-plan { display: block; text-align: center; padding: 16px 30px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 15px; transition: all 0.3s ease; }
+        
+        .btn-plan { display: block; text-align: center; padding: 18px 30px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 16px; transition: all 0.3s ease; }
         .pricing-card:not(.featured) .btn-plan { background: #cbff38; color: #0a0e14; }
         .pricing-card:not(.featured) .btn-plan:hover { box-shadow: 0 8px 30px rgba(203, 255, 56, 0.3); transform: translateY(-2px); }
         .pricing-card.featured .btn-plan { background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%); color: #ffffff; }
         .pricing-card.featured .btn-plan:hover { box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3); transform: translateY(-2px); }
         
-        .faq-section { padding: 80px 60px; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); }
-        .section-title { font-size: 36px; font-weight: 800; text-align: center; margin-bottom: 50px; color: #ffffff; }
-        .section-title span { background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .faq-grid { max-width: 800px; margin: 0 auto; }
-        .faq-item { position: relative; background: rgba(30, 41, 59, 0.4); border-radius: 12px; padding: 24px; margin-bottom: 16px; transition: all 0.3s ease; }
-        .faq-item::before { content: ''; position: absolute; inset: 0; border-radius: 12px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0.3; }
-        .faq-item:hover::before { opacity: 0.6; }
-        .faq-item:hover { transform: translateY(-2px); }
-        .faq-item h4 { color: #ffffff; font-size: 16px; margin-bottom: 10px; }
-        .faq-item p { color: #94a3b8; font-size: 14px; }
+        /* FAQ split layout */
+        .faq-section { padding: 80px 60px; max-width: 1200px; margin: 0 auto; }
+        .faq-row { display: flex; gap: 60px; align-items: flex-start; }
+        .faq-content { flex: 1; }
+        .faq-grid { flex: 1.5; }
         
-        .footer { padding: 40px 60px; background: #0a0e14; text-align: center; border-top: 1px solid rgba(203, 255, 56, 0.1); }
+        .section-label { font-size: 12px; color: #cbff38; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; font-weight: 700; }
+        .section-title { font-size: 42px; font-weight: 800; color: #ffffff; margin-bottom: 20px; letter-spacing: -1px; }
+        .section-title span { background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .section-desc { font-size: 18px; color: #94a3b8; line-height: 1.8; }
+        
+        .faq-items { display: flex; flex-direction: column; gap: 16px; }
+        .faq-item { position: relative; background: rgba(26, 29, 41, 0.6); backdrop-filter: blur(10px); border-radius: 16px; padding: 24px 28px; transition: all 0.3s ease; }
+        .faq-item::before { content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, rgba(203, 255, 56, 0.3) 0%, rgba(124, 58, 237, 0.3) 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .faq-item:hover { transform: translateX(8px); }
+        .faq-item:hover::before { background: linear-gradient(135deg, rgba(203, 255, 56, 0.6) 0%, rgba(124, 58, 237, 0.6) 100%); }
+        .faq-item h4 { color: #ffffff; font-size: 17px; margin-bottom: 10px; font-weight: 700; }
+        .faq-item p { color: #94a3b8; font-size: 14px; line-height: 1.6; }
+        
+        .footer { padding: 40px 60px; text-align: center; border-top: 1px solid rgba(203, 255, 56, 0.1); }
         .footer p { color: #64748b; font-size: 13px; }
         
-        @media (max-width: 968px) { .header { padding: 15px 30px; flex-direction: column; gap: 15px; } .pricing-hero { padding: 120px 30px 50px; } .pricing-container, .faq-section, .footer { padding: 50px 30px; } .pricing-hero h1 { font-size: 36px; } .pricing-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 1024px) {
+            .pricing-row { flex-direction: column; }
+            .faq-row { flex-direction: column; gap: 40px; }
+        }
+        
+        @media (max-width: 768px) {
+            .header { padding: 15px 30px; flex-direction: column; gap: 15px; }
+            .hero-section { padding: 140px 30px 60px; }
+            .hero-section h1 { font-size: 36px; }
+            .pricing-section, .faq-section { padding: 40px 30px; }
+            .section-title { font-size: 32px; }
+            .price-amount { font-size: 42px; }
+            .footer { padding: 30px; }
+        }
     </style>
 </head>
 <body>
+    <div class="bg-gradient"></div>
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+    <div class="floating-orb orb-3"></div>
+    
     <div class="header">
         <a href="index.html" class="logo">ENTRYX</a>
         <nav class="nav-links">
@@ -77,78 +194,88 @@
         </nav>
     </div>
     
-    <div class="pricing-hero">
-        <div class="floating-orb orb-1"></div>
-        <div class="floating-orb orb-2"></div>
-        <div class="pricing-hero-content">
+    <div class="content">
+        <div class="hero-section">
+            <div class="limited-banner">
+                <div class="pulse-dot"></div>
+                <span>Early Access — Limited to 100 Founding Members</span>
+            </div>
             <h1>Simple Pricing</h1>
             <p>Choose the package that fits your trading style</p>
         </div>
-    </div>
-    
-    <div class="pricing-container">
-        <div class="pricing-grid">
-            <div class="pricing-card">
-                <div class="plan-name">EntryX Razor</div>
-                <div class="plan-description">2 High Probability Levels</div>
-                <div class="plan-price">
-                    <span class="price-amount">£79</span>
-                    <span class="price-period">/month</span>
+        
+        <div class="pricing-section">
+            <div class="pricing-row">
+                <div class="pricing-card">
+                    <div class="plan-name">EntryX Razor</div>
+                    <div class="plan-description">2 High Probability Levels</div>
+                    <div class="plan-price">
+                        <span class="price-amount">£79</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><span class="check-icon">✓</span> Gold & NAS100 Trading</li>
+                        <li><span class="check-icon">✓</span> 2 HP Entry Levels</li>
+                        <li><span class="check-icon">✓</span> Prop Firm Friendly</li>
+                        <li><span class="check-icon">✓</span> Video Setup Guide</li>
+                        <li><span class="check-icon">✓</span> 24/7 Support</li>
+                    </ul>
+                    <a href="#" class="btn-plan">Get Started</a>
                 </div>
-                <ul class="plan-features">
-                    <li><span class="check-icon">✓</span> Gold & NAS100 Trading</li>
-                    <li><span class="check-icon">✓</span> 2 HP Entry Levels</li>
-                    <li><span class="check-icon">✓</span> Prop Firm Friendly</li>
-                    <li><span class="check-icon">✓</span> Video Setup Guide</li>
-                    <li><span class="check-icon">✓</span> 24/7 Support</li>
-                </ul>
-                <a href="#" class="btn-plan">Get Started</a>
-            </div>
-            <div class="pricing-card featured">
-                <div class="popular-tag">Most Popular</div>
-                <div class="plan-name">EntryX Power</div>
-                <div class="plan-description">3 High Probability Levels</div>
-                <div class="plan-price">
-                    <span class="price-amount">£99</span>
-                    <span class="price-period">/month</span>
+                <div class="pricing-card featured">
+                    <div class="popular-tag">Most Popular</div>
+                    <div class="plan-name">EntryX Power</div>
+                    <div class="plan-description">3 High Probability Levels</div>
+                    <div class="plan-price">
+                        <span class="price-amount">£99</span>
+                        <span class="price-period">/month</span>
+                    </div>
+                    <ul class="plan-features">
+                        <li><span class="check-icon">✓</span> Gold & NAS100 Trading</li>
+                        <li><span class="check-icon">✓</span> 3 HP Entry Levels</li>
+                        <li><span class="check-icon">✓</span> Prop Firm Friendly</li>
+                        <li><span class="check-icon">✓</span> Video Setup Guide</li>
+                        <li><span class="check-icon">✓</span> Priority 24/7 Support</li>
+                        <li><span class="check-icon">✓</span> More Trading Opportunities</li>
+                    </ul>
+                    <a href="#" class="btn-plan">Get Started</a>
                 </div>
-                <ul class="plan-features">
-                    <li><span class="check-icon">✓</span> Gold & NAS100 Trading</li>
-                    <li><span class="check-icon">✓</span> 3 HP Entry Levels</li>
-                    <li><span class="check-icon">✓</span> Prop Firm Friendly</li>
-                    <li><span class="check-icon">✓</span> Video Setup Guide</li>
-                    <li><span class="check-icon">✓</span> Priority 24/7 Support</li>
-                    <li><span class="check-icon">✓</span> More Trading Opportunities</li>
-                </ul>
-                <a href="#" class="btn-plan">Get Started</a>
             </div>
         </div>
-    </div>
-    
-    <div class="faq-section">
-        <h2 class="section-title">Frequently <span>Asked</span></h2>
-        <div class="faq-grid">
-            <div class="faq-item">
-                <h4>What broker should I use?</h4>
-                <p>The EA works with any MT5 broker. We recommend brokers with low spreads on NAS100 and Gold for best results.</p>
-            </div>
-            <div class="faq-item">
-                <h4>Do I need a VPS?</h4>
-                <p>Yes, we recommend a VPS for 24/5 uninterrupted trading. We provide a full video guide on how to set this up.</p>
-            </div>
-            <div class="faq-item">
-                <h4>Is it prop firm friendly?</h4>
-                <p>Absolutely. The EA is designed with prop firm rules in mind. Low drawdown and consistent performance.</p>
-            </div>
-            <div class="faq-item">
-                <h4>How much capital do I need?</h4>
-                <p>You can start with as little as $500, but we recommend $1000+ for optimal risk management.</p>
+        
+        <div class="faq-section">
+            <div class="faq-row">
+                <div class="faq-content">
+                    <div class="section-label">Got Questions?</div>
+                    <h2 class="section-title">Frequently <span>Asked</span></h2>
+                    <p class="section-desc">Everything you need to know about getting started with EntryX. Can't find what you're looking for? Reach out to our support team.</p>
+                </div>
+                <div class="faq-grid">
+                    <div class="faq-items">
+                        <div class="faq-item">
+                            <h4>What broker should I use?</h4>
+                            <p>The EA works with any MT5 broker. We recommend brokers with low spreads on NAS100 and Gold for best results.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h4>Do I need a VPS?</h4>
+                            <p>Yes, we recommend a VPS for 24/5 uninterrupted trading. We provide a full video guide on how to set this up.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h4>Is it prop firm friendly?</h4>
+                            <p>Absolutely. The EA is designed with prop firm rules in mind. Low drawdown and consistent performance.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h4>How much capital do I need?</h4>
+                            <p>You can start with as little as $500, but we recommend $1000+ for optimal risk management.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <div class="footer">
-        <p>© 2025 EntryX. All rights reserved.</p>
+        
+        <div class="footer">
+            <p>© 2025 EntryX. All rights reserved.</p>
+        </div>
     </div>
 </body>
 </html>

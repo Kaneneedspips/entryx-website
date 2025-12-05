@@ -86,6 +86,24 @@
             .hero-right { margin-top: 60px; }
         }
         
+        /* MOBILE: Flip order - rocket/graph at TOP, text below */
+        @media (max-width: 768px) {
+            .hero-container { 
+                flex-direction: column-reverse; 
+                text-align: center; 
+            }
+            .hero-right { 
+                margin-top: 0; 
+                margin-bottom: 40px; 
+            }
+            .hero-left { 
+                max-width: 100%; 
+            }
+            .rocket-icon { width: 120px; height: 120px; }
+            .brand-title { font-size: 32px; }
+            .equity-section { max-width: 100%; }
+        }
+        
         @media (max-width: 968px) {
             .header { padding: 15px 30px; flex-direction: column; gap: 15px; }
             .hero { padding: 120px 30px 50px; }
@@ -122,31 +140,20 @@
                     </div>
                     <div class="stat-item">
                         <div class="stat-label">Profit Factor</div>
-                        <div class="stat-value">1.8</div>
-                        <div class="stat-subtitle">Risk to Reward</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Max Drawdown</div>
-                        <div class="stat-value">3.4%</div>
-                        <div class="stat-subtitle">Prop Firm Safe</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Backtested</div>
-                        <div class="stat-value">5 Yrs</div>
-                        <div class="stat-subtitle">Real Tick Data</div>
+                        <div class="stat-value">2.1</div>
+                        <div class="stat-subtitle">Risk:Reward Optimized</div>
                     </div>
                 </div>
                 
                 <div class="feature-badges">
+                    <span class="badge">NAS100</span>
+                    <span class="badge">XAUUSD</span>
                     <span class="badge">Prop Firm Friendly</span>
-                    <span class="badge">MT5 Compatible</span>
-                    <span class="badge">Live Verified</span>
-                    <span class="badge">24/5 Trading</span>
+                    <span class="badge">24/5 Automation</span>
                 </div>
                 
                 <div class="cta-group">
-                    <a href="features.html" class="btn-primary">Our EA's<span>→</span></a>
-                    <a href="live-journal.html" class="btn-secondary">Live Journal</a>
+                    <a href="features.html" class="btn-primary">How It Works<span>→</span></a>
                     <a href="pricing.html" class="btn-secondary">See Pricing</a>
                 </div>
             </div>
