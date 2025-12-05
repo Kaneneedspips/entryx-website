@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EntryX - Automated Trading System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; background: #0a0e14; color: #e8eaed; line-height: 1.6; overflow-x: hidden; }
+        
+        .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 20px 60px; background: rgba(15, 17, 23, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(203, 255, 56, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 28px; font-weight: 900; color: #cbff38; letter-spacing: -1px; text-decoration: none; }
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a { color: #94a3b8; text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease; }
+        .nav-links a:hover { color: #cbff38; }
+        .nav-links a.active { color: #cbff38; }
+        .nav-discord { display: inline-flex; align-items: center; gap: 6px; background: #5865F2; color: #ffffff !important; padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 600; transition: all 0.3s; }
+        .nav-discord:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4); color: #ffffff !important; }
+        
+        .hero { min-height: 100vh; display: flex; padding: 120px 60px 60px; position: relative; overflow: hidden; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); }
+        .hero-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; width: 100%; gap: 60px; }
+        
+        .floating-orb { position: absolute; border-radius: 50%; filter: blur(80px); }
+        .orb-1 { width: 400px; height: 400px; background: rgba(203, 255, 56, 0.08); top: 10%; right: 20%; animation: float1 20s ease-in-out infinite; }
+        .orb-2 { width: 350px; height: 350px; background: rgba(124, 58, 237, 0.1); bottom: 10%; right: 30%; animation: float2 18s ease-in-out infinite; }
+        @keyframes float1 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(30px, 20px); } }
+        @keyframes float2 { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-20px, -30px); } }
+        
+        .hero-left { flex: 1; max-width: 600px; position: relative; z-index: 1; }
+        
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        
+        .hero-title { font-size: 52px; font-weight: 900; color: #ffffff; margin-bottom: 20px; letter-spacing: -2px; line-height: 1.1; }
+        .hero-title .gradient-text { background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-subtitle { font-size: 18px; color: #94a3b8; margin-bottom: 40px; line-height: 1.7; }
+        
+        .stats-showcase { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 40px; }
+        .stat-item { position: relative; background: linear-gradient(135deg, #1a1d29 0%, #0f1117 100%); border-radius: 12px; padding: 24px; transition: all 0.4s ease; }
+        .stat-item::before { content: ''; position: absolute; inset: 0; border-radius: 12px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .stat-item:hover { transform: translateY(-6px); box-shadow: 0 15px 40px rgba(203, 255, 56, 0.08); }
+        .stat-label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; font-weight: 600; }
+        .stat-value { font-size: 36px; font-weight: 800; color: #cbff38; line-height: 1.2; }
+        .stat-subtitle { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+        
+        .feature-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 35px; }
+        .badge { position: relative; background: rgba(203, 255, 56, 0.1); padding: 8px 16px; border-radius: 50px; font-size: 12px; color: #cbff38; font-weight: 600; transition: all 0.3s ease; }
+        .badge::before { content: ''; position: absolute; inset: 0; border-radius: 50px; padding: 1px; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .badge:hover { transform: translateY(-2px); }
+        
+        .cta-group { display: flex; gap: 15px; flex-wrap: wrap; }
+        .btn-primary { background: #cbff38; color: #0a0e14; padding: 16px 32px; border-radius: 50px; font-weight: 700; text-decoration: none; font-size: 15px; display: inline-flex; align-items: center; gap: 10px; transition: all 0.3s ease; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(203, 255, 56, 0.3); }
+        .btn-secondary { background: transparent; color: #ffffff; padding: 16px 32px; border-radius: 50px; font-weight: 600; text-decoration: none; font-size: 15px; border: 1px solid rgba(203, 255, 56, 0.3); transition: all 0.3s ease; }
+        .btn-secondary:hover { background: rgba(203, 255, 56, 0.1); border-color: #cbff38; transform: translateY(-2px); }
+        .btn-live { background: transparent; color: #22c55e; padding: 16px 32px; border-radius: 50px; font-weight: 600; text-decoration: none; font-size: 15px; border: 1px solid rgba(34, 197, 94, 0.4); transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-live:hover { background: rgba(34, 197, 94, 0.1); border-color: #22c55e; transform: translateY(-2px); }
+        .btn-live .live-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; animation: pulse 2s infinite; }
+        
+        .hero-right { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 1; }
+        
+        .hero-right-top { display: flex; align-items: flex-start; gap: 30px; margin-bottom: 30px; }
+        
+        .rocket-section { position: relative; z-index: 1; text-align: center; }
+        .rocket-container { animation: rocketFloat 4s ease-in-out infinite; }
+        @keyframes rocketFloat { 0%, 100% { transform: translateY(0) rotate(-2deg); } 25% { transform: translateY(-15px) rotate(0deg); } 50% { transform: translateY(-5px) rotate(2deg); } 75% { transform: translateY(-20px) rotate(0deg); } }
+        .rocket-icon { width: 130px; height: 130px; margin: 0 auto 15px; display: block; }
+        .rocket-svg { width: 100%; height: 100%; filter: drop-shadow(0 0 30px rgba(203, 255, 56, 0.3)); }
+        
+        .brand-title { font-size: 36px; font-weight: 900; color: #cbff38; margin-bottom: 5px; }
+        .brand-subtitle { font-size: 13px; color: #64748b; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; }
+        
+        .btn-live-right { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #22c55e; padding: 12px 24px; border-radius: 50px; font-weight: 600; text-decoration: none; font-size: 14px; border: 1px solid rgba(34, 197, 94, 0.4); transition: all 0.3s ease; }
+        .btn-live-right:hover { background: rgba(34, 197, 94, 0.1); border-color: #22c55e; transform: translateY(-2px); }
+        
+        .screenshot-section { position: relative; }
+        .screenshot-wrapper { position: relative; background: rgba(26, 29, 41, 0.8); backdrop-filter: blur(10px); border-radius: 16px; padding: 15px; max-width: 200px; }
+        .screenshot-wrapper::before { content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, rgba(203, 255, 56, 0.3) 0%, rgba(124, 58, 237, 0.3) 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+        .screenshot-label { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .mt5-screenshot { width: 100%; border-radius: 8px; opacity: 0.9; }
+        .screenshot-stats { display: flex; gap: 15px; margin-top: 12px; }
+        .ss-stat { text-align: center; flex: 1; }
+        .ss-value { display: block; font-size: 18px; font-weight: 800; color: #ffffff; }
+        .ss-value.green { color: #22c55e; }
+        .ss-label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .equity-section { position: relative; z-index: 1; width: 100%; max-width: 450px; }
+        .equity-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .equity-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
+        .equity-value { font-size: 24px; font-weight: 800; color: #cbff38; }
+        .equity-change { font-size: 14px; color: #22c55e; margin-left: 10px; }
+        .live-dot { display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; margin-right: 6px; animation: pulse 2s infinite; }
+        
+        .equity-chart { height: 120px; position: relative; }
+        .equity-svg { width: 100%; height: 100%; }
+        .equity-line { fill: none; stroke: url(#equityGradient); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 8px rgba(203, 255, 56, 0.4)); }
+        .equity-area { fill: url(#equityAreaGradient); }
+        
+        /* Scroll arrow */
+        .scroll-arrow { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); cursor: pointer; opacity: 0.7; transition: opacity 0.3s, transform 0.3s; z-index: 10; }
+        .scroll-arrow:hover { opacity: 1; }
+        .scroll-arrow svg { width: 28px; height: 28px; animation: bounce 2s ease-in-out infinite; }
+        .scroll-arrow.flipped svg { transform: rotate(180deg); animation: none; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+        html { scroll-behavior: smooth; }
+        
+        /* Testimonials slider */
+        .testimonials-section { padding: 60px 60px 80px; background: rgba(15, 17, 23, 0.5); overflow: hidden; }
+        .testimonials-header { max-width: 1400px; margin: 0 auto 40px; }
+        .testimonials-header h2 { font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 10px; }
+        .testimonials-header p { color: #64748b; font-size: 14px; }
+        .testimonials-track { display: flex; gap: 24px; animation: scroll 20s linear infinite; width: max-content; }
+        .testimonials-track:hover { animation-play-state: paused; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .testimonial-card { flex-shrink: 0; width: 320px; position: relative; background: rgba(26, 29, 41, 0.8); backdrop-filter: blur(10px); border-radius: 16px; padding: 24px; }
+        .testimonial-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, rgba(203, 255, 56, 0.3) 0%, rgba(124, 58, 237, 0.3) 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .testimonial-stars { color: #cbff38; font-size: 14px; margin-bottom: 12px; letter-spacing: 2px; }
+        .testimonial-text { color: #e8eaed; font-size: 14px; line-height: 1.7; margin-bottom: 16px; font-style: italic; }
+        .testimonial-author { display: flex; align-items: center; gap: 12px; }
+        .testimonial-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #0a0e14; font-size: 14px; }
+        .testimonial-info h4 { color: #ffffff; font-size: 14px; font-weight: 600; }
+        .testimonial-info span { color: #64748b; font-size: 12px; }
+        
+        .disclaimer { padding: 30px 60px; background: rgba(10, 14, 20, 0.8); border-top: 1px solid rgba(203, 255, 56, 0.1); }
+        .disclaimer-inner { max-width: 1000px; margin: 0 auto; text-align: center; }
+        .disclaimer p { font-size: 12px; color: #64748b; line-height: 1.6; }
+        .disclaimer strong { color: #94a3b8; }
+        
+        .footer { padding: 40px 60px; background: #0a0e14; text-align: center; border-top: 1px solid rgba(203, 255, 56, 0.1); }
+        .footer-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .footer p { color: #64748b; font-size: 13px; }
+        .footer-links { display: flex; gap: 20px; align-items: center; }
+        .footer-links a { color: #94a3b8; text-decoration: none; font-size: 13px; transition: color 0.3s; }
+        .footer-links a:hover { color: #cbff38; }
+        .discord-btn { display: inline-flex; align-items: center; gap: 8px; background: #5865F2; color: #ffffff; padding: 10px 20px; border-radius: 50px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 0.3s; }
+        .discord-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(88, 101, 242, 0.4); }
+        
+        @media (max-width: 1024px) {
+            .hero-container { flex-direction: column; text-align: center; }
+            .hero-left { max-width: 100%; }
+            .limited-banner { margin-left: auto; margin-right: auto; }
+            .stats-showcase { max-width: 500px; margin-left: auto; margin-right: auto; }
+            .feature-badges { justify-content: center; }
+            .cta-group { justify-content: center; }
+            .hero-right { margin-top: 60px; }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-container { flex-direction: column-reverse; text-align: center; }
+            .hero-right { margin-top: 0; margin-bottom: 40px; }
+            .hero-left { max-width: 100%; }
+            .rocket-icon { width: 120px; height: 120px; }
+            .brand-title { font-size: 32px; }
+            .equity-section { max-width: 100%; }
+        }
+        
+        @media (max-width: 968px) {
+            .header { padding: 15px 30px; flex-direction: column; gap: 15px; }
+            .hero { padding: 120px 30px 50px; }
+            .hero-title { font-size: 36px; }
+            .stats-showcase { grid-template-columns: 1fr; }
+            .disclaimer { padding: 20px 30px; }
+            .footer { padding: 30px; }
+            .cta-group { flex-direction: column; align-items: center; }
+            .btn-primary, .btn-secondary, .btn-live { width: 100%; justify-content: center; }
+            .testimonials-section { padding: 40px 30px 60px; }
+            .testimonial-card { width: 280px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html" class="logo">ENTRYX</a>
+        <nav class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="features.html">Our EA's</a>
+            <a href="pricing.html">Pricing</a>
+            <a href="live-journal.html">Live Journal</a>
+            <a href="faq.html">FAQ</a>
+            <a href="about.html">About</a>
+            <a href="#" class="nav-discord">
+                <svg width="16" height="12" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.4.2a.2.2 0 00-.2.1 40.8 40.8 0 00-1.8 3.7 54 54 0 00-16.2 0A37.4 37.4 0 0025.4.3a.2.2 0 00-.2-.1 58.4 58.4 0 00-14.7 4.6.2.2 0 00-.1.1A59.8 59.8 0 00.4 43.4a.2.2 0 000 .2 58.9 58.9 0 0017.7 9 .2.2 0 00.3-.1 42.1 42.1 0 003.6-5.9.2.2 0 00-.1-.3 38.8 38.8 0 01-5.5-2.7.2.2 0 010-.4l1.1-.9a.2.2 0 01.2 0 42 42 0 0035.8 0 .2.2 0 01.2 0l1.1.9a.2.2 0 010 .3 36.4 36.4 0 01-5.5 2.7.2.2 0 00-.1.4 47.2 47.2 0 003.6 5.9.2.2 0 00.2.1 58.7 58.7 0 0017.8-9 .2.2 0 000-.2c1.5-15.6-2.5-29.2-10.6-41.2a.2.2 0 00-.1-.1zM23.7 35.6c-3.6 0-6.5-3.3-6.5-7.3s2.9-7.3 6.5-7.3 6.6 3.3 6.5 7.3c0 4-2.9 7.3-6.5 7.3zm24 0c-3.6 0-6.5-3.3-6.5-7.3s2.9-7.3 6.5-7.3 6.6 3.3 6.5 7.3c0 4-2.9 7.3-6.5 7.3z"/></svg>
+                Discord
+            </a>
+        </nav>
+    </div>
+    
+    <section class="hero">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="hero-container">
+            <div class="hero-left">
+                <h1 class="hero-title">Stop Trading Manually.<br>Let the <span class="gradient-text">EA</span> Work.</h1>
+                <p class="hero-subtitle">Automated trading system for NAS100 & Gold with verified live performance and prop firm friendly risk management.</p>
+                
+                <div class="stats-showcase">
+                    <div class="stat-item">
+                        <div class="stat-label">Win Rate</div>
+                        <div class="stat-value">74.3%</div>
+                        <div class="stat-subtitle">Exposed to Market 2hrs/Day</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Profit Factor</div>
+                        <div class="stat-value">1.7</div>
+                        <div class="stat-subtitle">Risk:Reward Optimized</div>
+                    </div>
+                </div>
+                
+                <div class="feature-badges">
+                    <span class="badge">NAS100</span>
+                    <span class="badge">XAUUSD</span>
+                    <span class="badge">Prop Firm Friendly</span>
+                    <span class="badge">24/5 Automation</span>
+                </div>
+                
+                <div class="cta-group">
+                    <a href="faq.html" class="btn-primary">Why Trust Us?</a>
+                    <a href="features.html" class="btn-primary">How It Works</a>
+                    <a href="pricing.html" class="btn-secondary">See Pricing</a>
+                </div>
+            </div>
+            
+            <div class="hero-right">
+                <div class="hero-right-top">
+                    <div class="rocket-section">
+                        <div class="rocket-container">
+                            <div class="rocket-icon">
+                                <svg class="rocket-svg" viewBox="0 0 200 180">
+                                    <path d="M92 55 L90 125 L110 125 L108 55 Q108 38 100 30 Q92 38 92 55 Z" fill="#cbff38"/>
+                                    <path d="M96 50 L95 125 L100 125 L100 45 Q100 36 96 50 Z" fill="#d4ff5c" opacity="0.6"/>
+                                    <ellipse cx="100" cy="58" rx="7" ry="11" fill="#0a0e14" opacity="0.8"/>
+                                    <ellipse cx="100" cy="57" rx="5" ry="8" fill="#7c3aed" opacity="0.9"/>
+                                    <ellipse cx="99" cy="54" rx="2" ry="3" fill="#a78bfa" opacity="0.9"/>
+                                    <path d="M90 105 L72 138 L90 125 Z" fill="#7c3aed"/>
+                                    <path d="M110 105 L128 138 L110 125 Z" fill="#7c3aed"/>
+                                    <rect x="91" y="125" width="18" height="9" fill="#5b21b6" rx="1"/>
+                                    <rect x="93" y="134" width="14" height="5" fill="#4c1d95"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="brand-title">EntryX Power</div>
+                        <div class="brand-subtitle">Tested & Verified</div>
+                        <a href="live-journal.html" class="btn-live-right"><span class="live-dot"></span>Live Tracker</a>
+                    </div>
+                    
+                    <div class="screenshot-section">
+                        <div class="screenshot-wrapper">
+                            <div class="screenshot-label"><span class="live-dot"></span>Today's Results</div>
+                            <img src="https://raw.githubusercontent.com/Kaneneedspips/entryx-website/main/mt5-screenshot.png" alt="MT5 Trading Results" class="mt5-screenshot" onerror="this.parentElement.style.display='none'"/>
+                            <div class="screenshot-stats">
+                                <div class="ss-stat"><span class="ss-value green">+£91.59</span><span class="ss-label">Daily Profit</span></div>
+                                <div class="ss-stat"><span class="ss-value">8</span><span class="ss-label">Trades</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="equity-section">
+                    <div class="equity-header">
+                        <div>
+                            <span class="live-dot"></span>
+                            <span class="equity-label">Live Equity</span>
+                        </div>
+                        <div>
+                            <span class="equity-value" id="equityValue">£1,077</span>
+                            <span class="equity-change" id="equityChange">+7.7%</span>
+                        </div>
+                    </div>
+                    <div class="equity-chart">
+                        <svg class="equity-svg" viewBox="0 0 450 120" preserveAspectRatio="none" id="equityChart">
+                            <defs>
+                                <linearGradient id="equityGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#cbff38"/>
+                                    <stop offset="100%" style="stop-color:#7c3aed"/>
+                                </linearGradient>
+                                <linearGradient id="equityAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#cbff38;stop-opacity:0.15"/>
+                                    <stop offset="100%" style="stop-color:#cbff38;stop-opacity:0"/>
+                                </linearGradient>
+                            </defs>
+                            <path class="equity-area" id="equityArea"/>
+                            <path class="equity-line" id="equityLine"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="#testimonials" class="scroll-arrow" id="scrollArrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#8b95a5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </a>
+    </section>
+    
+    <section class="testimonials-section" id="testimonials">
+        <div class="testimonials-header">
+            <h2>What Traders Are Saying</h2>
+            <p>Real feedback from our community</p>
+        </div>
+        <div class="testimonials-track">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"On FTMO Phase 2 now. Passed Phase 1 in about 11 days which I wasn't expecting. Low drawdown is clutch for challenges."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">M</div>
+                    <div class="testimonial-info">
+                        <h4>Marcus T.</h4>
+                        <span>United Kingdom</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★☆</div>
+                <p class="testimonial-text">"Took a few weeks to get going properly but once I sorted my broker settings it's been solid. Wish I found this sooner."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">J</div>
+                    <div class="testimonial-info">
+                        <h4>James R.</h4>
+                        <span>Australia</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"First week was slow and I was stressing. Month 2 now and properly up. Just gotta trust the process with this one."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">S</div>
+                    <div class="testimonial-info">
+                        <h4>Sarah K.</h4>
+                        <span>Canada</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"Support helped me sort my VPS issues out same day. Went from breaking even to actually making money. Happy with it."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">D</div>
+                    <div class="testimonial-info">
+                        <h4>Dan W.</h4>
+                        <span>United States</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Duplicate for seamless loop -->
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"On FTMO Phase 2 now. Passed Phase 1 in about 11 days which I wasn't expecting. Low drawdown is clutch for challenges."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">M</div>
+                    <div class="testimonial-info">
+                        <h4>Marcus T.</h4>
+                        <span>United Kingdom</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★☆</div>
+                <p class="testimonial-text">"Took a few weeks to get going properly but once I sorted my broker settings it's been solid. Wish I found this sooner."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">J</div>
+                    <div class="testimonial-info">
+                        <h4>James R.</h4>
+                        <span>Australia</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"First week was slow and I was stressing. Month 2 now and properly up. Just gotta trust the process with this one."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">S</div>
+                    <div class="testimonial-info">
+                        <h4>Sarah K.</h4>
+                        <span>Canada</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"Support helped me sort my VPS issues out same day. Went from breaking even to actually making money. Happy with it."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">D</div>
+                    <div class="testimonial-info">
+                        <h4>Dan W.</h4>
+                        <span>United States</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="disclaimer">
+        <div class="disclaimer-inner">
+            <p><strong>Disclaimer:</strong> Past performance does not guarantee future results. Trading involves substantial risk of loss and is not suitable for all investors. Results may vary based on broker, market conditions, slippage, and execution quality. Only trade with capital you can afford to lose.</p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-content">
+            <p>© 2025 EntryX. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="faq.html">FAQ</a>
+                <a href="about.html">About</a>
+                <a href="#" class="discord-btn">
+                    <svg width="20" height="15" viewBox="0 0 71 55" fill="currentColor"><path d="M60.1 4.9A58.5 58.5 0 0045.4.2a.2.2 0 00-.2.1 40.8 40.8 0 00-1.8 3.7 54 54 0 00-16.2 0A37.4 37.4 0 0025.4.3a.2.2 0 00-.2-.1 58.4 58.4 0 00-14.7 4.6.2.2 0 00-.1.1A59.8 59.8 0 00.4 43.4a.2.2 0 000 .2 58.9 58.9 0 0017.7 9 .2.2 0 00.3-.1 42.1 42.1 0 003.6-5.9.2.2 0 00-.1-.3 38.8 38.8 0 01-5.5-2.7.2.2 0 010-.4l1.1-.9a.2.2 0 01.2 0 42 42 0 0035.8 0 .2.2 0 01.2 0l1.1.9a.2.2 0 010 .3 36.4 36.4 0 01-5.5 2.7.2.2 0 00-.1.4 47.2 47.2 0 003.6 5.9.2.2 0 00.2.1 58.7 58.7 0 0017.8-9 .2.2 0 000-.2c1.5-15.6-2.5-29.2-10.6-41.2a.2.2 0 00-.1-.1zM23.7 35.6c-3.6 0-6.5-3.3-6.5-7.3s2.9-7.3 6.5-7.3 6.6 3.3 6.5 7.3c0 4-2.9 7.3-6.5 7.3zm24 0c-3.6 0-6.5-3.3-6.5-7.3s2.9-7.3 6.5-7.3 6.6 3.3 6.5 7.3c0 4-2.9 7.3-6.5 7.3z"/></svg>
+                    Join Discord
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function loadEquityData() {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/Kaneneedspips/entryx-live-report/main/equity.json?' + Date.now());
+                const data = await response.json();
+                
+                if (data && data.history && data.history.length > 0) {
+                    document.getElementById('equityValue').textContent = '£' + Math.round(data.balance).toLocaleString();
+                    const change = data.percentGain || ((data.balance - data.startBalance) / data.startBalance * 100);
+                    document.getElementById('equityChange').textContent = (change >= 0 ? '+' : '') + change.toFixed(1) + '%';
+                    drawEquityCurve(data.history);
+                }
+            } catch (e) {
+                drawEquityCurve([1000, 1020, 1015, 1035, 1050, 1045, 1060, 1077]);
+            }
+        }
+        
+        function drawEquityCurve(points) {
+            const width = 450, height = 120, padding = 10;
+            const min = Math.min(...points) * 0.98, max = Math.max(...points) * 1.02;
+            const xStep = width / (points.length - 1), yScale = (height - padding * 2) / (max - min);
+            let linePath = '', areaPath = '';
+            points.forEach((val, i) => {
+                const x = i * xStep, y = height - padding - (val - min) * yScale;
+                if (i === 0) { linePath += 'M' + x + ',' + y; areaPath += 'M' + x + ',' + y; }
+                else { linePath += ' L' + x + ',' + y; areaPath += ' L' + x + ',' + y; }
+            });
+            areaPath += ' L' + width + ',' + height + ' L0,' + height + ' Z';
+            document.getElementById('equityLine').setAttribute('d', linePath);
+            document.getElementById('equityArea').setAttribute('d', areaPath);
+        }
+        loadEquityData();
+        setInterval(loadEquityData, 5 * 60 * 1000);
+        
+        // Scroll arrow flip functionality
+        const scrollArrow = document.getElementById('scrollArrow');
+        const heroSection = document.querySelector('.hero');
+        let isAtTop = true;
+        
+        window.addEventListener('scroll', () => {
+            const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+            if (window.scrollY > heroBottom / 2) {
+                if (isAtTop) {
+                    scrollArrow.classList.add('flipped');
+                    scrollArrow.href = '#';
+                    isAtTop = false;
+                }
+            } else {
+                if (!isAtTop) {
+                    scrollArrow.classList.remove('flipped');
+                    scrollArrow.href = '#testimonials';
+                    isAtTop = true;
+                }
+            }
+        });
+        
+        scrollArrow.addEventListener('click', (e) => {
+            if (!isAtTop) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>
