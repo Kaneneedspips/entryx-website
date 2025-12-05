@@ -51,7 +51,9 @@
         .value-card { position: relative; background: rgba(26, 29, 41, 0.6); backdrop-filter: blur(10px); border-radius: 16px; padding: 28px; transition: all 0.3s ease; }
         .value-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; padding: 1px; background: linear-gradient(135deg, rgba(203, 255, 56, 0.3) 0%, rgba(124, 58, 237, 0.3) 100%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
         .value-card:hover { transform: translateY(-4px); }
-        .value-icon { font-size: 28px; margin-bottom: 15px; }
+        .value-icon { width: 32px; height: 32px; margin-bottom: 15px; }
+        .value-arrow { width: 100%; height: 100%; animation: arrowBounce 2s ease-in-out infinite; }
+        @keyframes arrowBounce { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
         .value-card h3 { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 10px; }
         .value-card p { color: #94a3b8; font-size: 14px; line-height: 1.7; }
         
@@ -141,30 +143,30 @@
                 <div class="section-label">Our Story</div>
                 <h2 class="section-title">Why We Built <span>EntryX</span></h2>
                 <div class="story-text">
-                    <p>I got into trading the same way most people do - watching YouTube videos at 2am, thinking I'd cracked the code. Spent years glued to charts, missing out on life, stressing over every candle. The classic story.</p>
-                    <p>Manual trading was exhausting. I'd wake up for London open, trade all morning, then spend the rest of the day second-guessing myself. Did I exit too early? Should I have taken that second trade? The mental drain was real. And the worst part? I wasn't even consistently profitable.</p>
-                    <p><strong>I wanted my time back.</strong></p>
-                    <p>I started looking at automation. Bought a few EAs - all garbage. Fancy backtests that fell apart in live markets. Vendors who disappeared after payment. Strategies that only worked in specific conditions. The industry is full of it.</p>
-                    <p>So I built my own. Took over a year. Not on free demo data that everyone uses - on 5+ years of premium tick data from institutional providers. Tested across multiple market cycles. The COVID crash. The recovery. Rate hikes. Everything.</p>
-                    <p>The goal was simple: <strong>something I could trust to run while I got on with my life.</strong> No more waking up for sessions. No more staring at charts all day. Just set it, let it work, and check in when I want to - not because I have to.</p>
-                    <p>That's EntryX. It's what I run on my own money, every single day. The live journal you see on this site? That's my capital. We eat our own cooking.</p>
+                    <p>I got into trading the same way most people do. YouTube videos at 2am, thinking I'd figured something out. Spent years staring at charts, missing out on life, stressing over every candle.</p>
+                    <p>Don't get me wrong, I was profitable. Just about. Small gains here and there but nothing life changing. And the time it took to get those gains? Mental. Waking up for London open, trading all morning, then spending the rest of the day wondering if I should have held longer or closed sooner.</p>
+                    <p>I just wanted my time back.</p>
+                    <p>Started looking at automation. Bought a few EAs and honestly, all garbage. Nice looking backtests that completely fell apart in live markets. Vendors who vanished after payment. Strategies that only worked when the stars aligned. The industry is full of it.</p>
+                    <p>So I partnered with some freelance MQL5 developers and we built our own. Took over a year. Not using the free demo data everyone else uses, but 5+ years of premium tick data from proper institutional providers. Tested it through multiple market cycles. COVID crash. The recovery. Rate hikes. All of it.</p>
+                    <p>The goal was simple. Something I could trust to run while I got on with my life. No more waking up for sessions. No more staring at charts all day. Just set it up, let it do its thing, and check in when I want to.</p>
+                    <p>That's EntryX. It's what I run on my own money, every single day. The live journal on this site? That's my capital. We use what we sell.</p>
                 </div>
                 
                 <div class="values-grid">
                     <div class="value-card">
-                        <div class="value-icon">🎯</div>
+                        <div class="value-icon"><svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="#cbff38" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
                         <h3>Transparency</h3>
-                        <p>Live results updated every 15 minutes. No cherry-picked backtests. What you see is what you get.</p>
+                        <p>Live results updated every 15 minutes. No cherry picked backtests. What you see is what you get.</p>
                     </div>
                     <div class="value-card">
-                        <div class="value-icon">⚡</div>
+                        <div class="value-icon"><svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="#cbff38" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
                         <h3>Active Development</h3>
-                        <p>Markets change, and so do we. Regular updates keep the strategy optimized for current conditions.</p>
+                        <p>Markets change and so do we. Regular updates keep the strategy optimized for current conditions.</p>
                     </div>
                     <div class="value-card">
-                        <div class="value-icon">🤝</div>
+                        <div class="value-icon"><svg class="value-arrow" viewBox="0 0 24 24" fill="none" stroke="#cbff38" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
                         <h3>Real Support</h3>
-                        <p>Not a bot. Not a help desk. Real traders who use the EA daily and actually give a damn.</p>
+                        <p>Not a bot. Not a help desk. Real people who use the EA daily and actually give a damn.</p>
                     </div>
                 </div>
             </div>
@@ -178,16 +180,16 @@
                         <div class="team-avatar">K</div>
                         <div class="team-info">
                             <h3>Kane</h3>
-                            <div class="role">Founder & Lead Developer</div>
-                            <p>8+ years trading experience. Built the core strategy from the ground up. Trades EntryX daily on personal and prop accounts.</p>
+                            <div class="role">Founder</div>
+                            <p>8+ years trading experience. Runs EntryX daily on personal and prop accounts. Built the strategy, partnered with developers to bring it to life.</p>
                         </div>
                     </div>
                     <div class="team-card">
                         <div class="team-avatar">Dev</div>
                         <div class="team-info">
-                            <h3>Development Team</h3>
+                            <h3>Freelance Development</h3>
                             <div class="role">MQL5 & Infrastructure</div>
-                            <p>Handles optimization, broker compatibility, and keeps the infrastructure running 24/7. Regular updates and improvements.</p>
+                            <p>Partnered with experienced MQL5 developers to code, backtest and optimize the strategy. Ongoing collaboration for updates and improvements.</p>
                         </div>
                     </div>
                 </div>
