@@ -26,10 +26,12 @@
         
         .hero-left { flex: 1; max-width: 600px; position: relative; z-index: 1; }
         
-        .limited-banner { display: inline-flex; align-items: center; gap: 10px; background: rgba(124, 58, 237, 0.15); border: 1px solid rgba(124, 58, 237, 0.4); padding: 10px 20px; border-radius: 50px; margin-bottom: 20px; }
-        .limited-banner .pulse-dot { width: 8px; height: 8px; background: #a78bfa; border-radius: 50%; animation: pulse 2s infinite; }
+        .limited-banner { display: inline-flex; align-items: center; gap: 10px; background: rgba(124, 58, 237, 0.15); border: 1px solid rgba(124, 58, 237, 0.4); padding: 10px 20px; border-radius: 50px; margin-bottom: 20px; overflow: hidden; }
+        .limited-banner .pulse-dot { width: 8px; height: 8px; background: #a78bfa; border-radius: 50%; animation: pulse 2s infinite; flex-shrink: 0; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-        .limited-banner span { color: #a78bfa; font-weight: 600; font-size: 13px; letter-spacing: 0.5px; }
+        .limited-banner .typewriter { color: #a78bfa; font-weight: 600; font-size: 13px; letter-spacing: 0.5px; overflow: hidden; white-space: nowrap; border-right: 2px solid #a78bfa; width: 0; animation: typing 2s steps(20) 0.5s forwards, blink 0.75s step-end infinite; }
+        @keyframes typing { from { width: 0; } to { width: 20ch; } }
+        @keyframes blink { 0%, 100% { border-color: #a78bfa; } 50% { border-color: transparent; } }
         
         .hero-title { font-size: 52px; font-weight: 900; color: #ffffff; margin-bottom: 20px; letter-spacing: -2px; line-height: 1.1; }
         .hero-title .gradient-text { background: linear-gradient(135deg, #cbff38 0%, #7c3aed 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
@@ -139,7 +141,7 @@
             <div class="hero-left">
                 <div class="limited-banner">
                     <div class="pulse-dot"></div>
-                    <span>Limited Availability — Founding Members Only</span>
+                    <span class="typewriter">Limited Availability</span>
                 </div>
                 <h1 class="hero-title">Stop Trading Manually.<br>Let the <span class="gradient-text">EA</span> Work.</h1>
                 <p class="hero-subtitle">Automated trading system for NAS100 & Gold with verified live performance and prop firm friendly risk management.</p>
